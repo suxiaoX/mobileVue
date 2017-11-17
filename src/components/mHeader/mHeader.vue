@@ -15,8 +15,8 @@
 </template>
 <script>
 import Vue from 'vue'
-import navbar from '../Navbar/navbar'
-import Search from '../../baseCom/Search/Search'
+import navbar from '@/components/Navbar/navbar'
+import Search from '@/baseCom/Search/Search'
 import { Header, Button } from 'mint-ui'
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)

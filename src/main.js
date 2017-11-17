@@ -3,9 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import fastclick from 'fastclick'
+import { Lazyload } from 'mint-ui'
 
-// import './assets/css/index.scss'
+Vue.use(Lazyload)
+
+// import 'assets/css/index.scss'
 // import './assets/css/reset.scss'
+
+fastclick.attach(document.body)
 
 Vue.config.productionTip = false
 
