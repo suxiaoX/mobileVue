@@ -19,6 +19,10 @@ module.exports = {
   'rules': {
     // allow paren-less arrow functions
     'arrow-parens': 0,
+    // 要求有分号，没分号不习惯
+    "semi": [2, "always"],
+     // 禁止不必要的分号
+     "no-extra-semi": 2,
     // allow async-await
     'generator-star-spacing': 0,
     // allow debugger during development

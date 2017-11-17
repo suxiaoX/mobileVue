@@ -18,7 +18,7 @@ Vue.component(SwipeItem.name, SwipeItem)
 export default {
   methods: {
     handleChange (index) {
-      console.log(index)
+      console.log(index);
     }
   }
 }
@@ -29,6 +29,10 @@ export default {
 }
 .mint-swipe-items-wrap > div {
   background: yellowgreen;
+}
+.mint-swipe-indicator.is-active {
+  width: 15px;
+  border-radius: 8px;
 }
 </style>
 

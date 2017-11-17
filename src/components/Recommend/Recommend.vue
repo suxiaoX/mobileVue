@@ -22,7 +22,7 @@ Vue.use(InfiniteScroll)
 export default {
   data () {
     return {
-      list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+      list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
       loading: false
     }
   },
@@ -39,7 +39,7 @@ export default {
         }
         this.loading = false
       }, 2500)
-      console.log(2222);
+      console.log(2222)
     }
   }
 }
