@@ -50,6 +50,7 @@ module.exports = {
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
       },
+      /*
       {
         test: /\.s[ac]ss$/,
         use: [
@@ -67,6 +68,7 @@ module.exports = {
           }
         ]
       },
+      */
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',

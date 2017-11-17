@@ -4,8 +4,14 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const HelloWorld = resolve => {
+const mHeader = resolve => {
   import('@/components/mHeader/mHeader').then(module => {
+    resolve(module)
+  })
+}
+
+const Test = resolve => {
+  import('@/components/Test/Test').then(module => {
     resolve(module)
   })
 }
@@ -14,8 +20,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'header',
+      component: mHeader
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: Test
     }
   ]
 })

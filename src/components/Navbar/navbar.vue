@@ -21,7 +21,7 @@
         <!-- <mt-cell v-for="n in 6" :title="'选项 ' + n" :key="n" /> -->
       </mt-tab-container-item>
       <mt-tab-container-item id="4">
-        <mt-cell v-for="n in 3" :title="'选项 ' + n" :key="n" />
+        <mt-cell v-for="n in 30" :title="'选项 ' + n" :key="n" />
       </mt-tab-container-item>
     </mt-tab-container>
   </div>

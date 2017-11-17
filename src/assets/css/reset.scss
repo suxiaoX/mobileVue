@@ -1,3 +1,48 @@
+// 清除body自带的margin,取消文字选中 -- 禁止body在横竖屏切换后字体大小改变。
 body {
-  margin: 0;
+  margin:0;
+  -webkit-user-select: none;
+  -webkit-text-size-adjust: 100%;
+  * {
+    // 取消文字选中，设置移动端通用字体
+    -webkit-user-select: none;
+    font-family: Helvetica;
+  }
+}
+// 清除a,input,button标签按下时的阴影
+a,
+input,
+button {
+  -webkit-tap-highlight-color: rgba(211, 25, 25, 0);
+}
+// 清除ios下input,button自带的圆角
+input,
+button {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+input {
+  outline: none;
+  vertical-align: middle;
+}
+
+img {
+  vertical-align: middle;
+}
+
+ul {
+  margin:0;
+  padding:0;
+  list-style: none;
+}
+
+h3,
+h4,
+p {
+  margin:0;
 }
