@@ -44,11 +44,14 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
+
+@import '../../assets/css/variable.scss';
 
 li {
   display: block;
   margin: 20px 0;
+  font-size: $font-size-medium;
 }
 </style>
 
