@@ -1,10 +1,10 @@
 <template>
   <div>
-    <header>recommend</header>
-    <mt-swipe :auto="4000"  @change="handleChange">
-      <mt-swipe-item>1</mt-swipe-item>
-      <mt-swipe-item>2</mt-swipe-item>
-      <mt-swipe-item>3</mt-swipe-item>
+    <mt-swipe 
+      :auto="autoNumber"
+      :speed="speed"
+      :continuous="loop">
+      <slot></slot>
     </mt-swipe>
   </div>
 </template>
@@ -16,23 +16,43 @@ Vue.component(Swipe.name, Swipe)
 Vue.component(SwipeItem.name, SwipeItem)
 
 export default {
-  methods: {
-    handleChange (index) {
-      console.log(index);
+  props: {
+    autoNumber: {
+      type: Number,
+      default: 4000
+    },
+    speed: {
+      type: Number,
+      default: 300
+    },
+    loop: {
+      type: Boolean,
+      default: true,
     }
   }
 }
 </script>
 <style lang="scss">
 .mint-swipe {
-  height: 100px;
+  height: 150px;
+
+  img {
+    width: 100%;
+  }
 }
-.mint-swipe-items-wrap > div {
-  background: yellowgreen;
+.mint-swipe-item {
+a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
 }
 .mint-swipe-indicator.is-active {
   width: 15px;
   border-radius: 8px;
+  opacity: .8;
 }
 </style>
 

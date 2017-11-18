@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
+    "server": "node build/dev-server.js",
     "unit": "jest test/unit/specs --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
@@ -14,6 +15,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "fastclick": "^1.0.6",
     "jsonp": "^0.2.1",
     "mint-ui": "^2.2.10",
