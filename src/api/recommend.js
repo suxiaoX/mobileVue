@@ -10,7 +10,6 @@ export function getRecommend () {
     uin: 0,
     needNewCode: 1
   });
-
   return jsonp(url, data, options);
 }
 

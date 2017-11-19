@@ -6,34 +6,42 @@
         <img :src="item.picUrl" alt="" />
       </mt-swipe-item>
     </swipe>
-    <div>
-      <h4>热门歌单推荐</h4>
+    <div class="hot-music">
+      <h4 class="title">热门歌单推荐</h4>
       <ul v-infinite-scroll="loadMore"
           infinite-scroll-disabled="loading"
-          infinite-scroll-distance="10">
-        <li v-for="(value, index) in this.list" :key="index">选项{{value}}</li>
+          infinite-scroll-distance="10"
+          class="recommend-list"
+          >
+        <li v-for="item in this.discList" :key="item.id" class="music-info">
+          <div class="img-wraper">
+            <img v-lazy="item.imgurl" :src="item.imgurl" />
+          </div>
+          <div class="text">
+            <h4 class="title" v-html="item.creator.name"></h4>
+            <p class="desc" v-html="item.dissname"></p>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import Swipe from '@/baseCom/Swipe/Swipe'
-import { Cell, InfiniteScroll, SwipeItem } from 'mint-ui'
-import { getRecommend, getDiscList } from '../../api/recommend.js'
-import { ERR_OK } from '../../api/config.js'
+import Vue from 'vue';
+import Swipe from '@/baseCom/Swipe/Swipe';
+import { Cell, InfiniteScroll, SwipeItem } from 'mint-ui';
+import { getRecommend, getDiscList } from 'api/recommend.js';
+import { ERR_OK } from 'api/config.js';
 
-console.log(getRecommend);
-
-Vue.component(Cell.name, Cell)
-Vue.use(InfiniteScroll)
-Vue.component(SwipeItem.name, SwipeItem)
+Vue.component(Cell.name, Cell);
+Vue.use(InfiniteScroll);
+Vue.component(SwipeItem.name, SwipeItem);
 
 export default {
   data () {
     return {
-      list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
       recomends: [],
+      discList: [],
       loading: false
     }
   },
@@ -48,11 +56,7 @@ export default {
     loadMore () {
       this.loading = true
       setTimeout(() => {
-        let last = this.list[this.list.length - 1]
-        for (let i = 1; i <= 10; i++) {
-          this.list.push(last + i)
-        }
-        this.loading = false
+        console.log(22222);
       }, 2500)
     },
     _getRecommend () {
@@ -65,7 +69,7 @@ export default {
     _getDiscList () {
       getDiscList().then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res.data)
+          this.discList = res.data.list;
         }
       })
     }
@@ -75,6 +79,28 @@ export default {
 <style lang="scss">
 
 @import '../../assets/css/variable.scss';
+@import '../../assets/css/mixin.scss';
+.hot-music {
+  .music-info {
+    display: flex;
+    justify-content: space-between;
+    @include px2rem(padding-left, 40);
+    @include px2rem(padding-right, 40);
+
+    .img-wraper {
+      @include px2rem(width, 120);
+      @include px2rem(height, 120);
+
+      img {
+        width: 100%;
+      }
+    }
+    .text {
+      text-align: left;
+    }
+  }
+}
+
 
 li {
   display: block;
