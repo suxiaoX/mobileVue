@@ -15,7 +15,7 @@
             class="recommend-list">
           <li v-for="item in this.discList" :key="item.id" class="music-info clearfix">
             <div class="img-wraper fl">
-              <img v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
+              <img class="needsclick" v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
             </div>
             <div class="text fl">
               <h4 class="text-title" v-html="item.creator.name"></h4>
