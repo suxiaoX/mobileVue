@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "better-scroll": "^1.4.2",
     "fastclick": "^1.0.6",
     "jsonp": "^0.2.1",
     "mint-ui": "^2.2.10",
