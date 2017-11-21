@@ -10,16 +10,15 @@
       <mt-button icon="more" slot="right"></mt-button>
     </mt-header>
     <!-- <Search /> -->
-    <navbar />
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import navbar from '@/components/Navbar/navbar'
-import Search from '@/baseCom/Search/Search'
-import { Header, Button } from 'mint-ui'
-Vue.component(Header.name, Header)
-Vue.component(Button.name, Button)
+import Vue from 'vue';
+import navbar from '@/components/Navbar/navbar';
+import Search from '@/baseCom/Search/Search';
+import { Header, Button } from 'mint-ui';
+Vue.component(Header.name, Header);
+Vue.component(Button.name, Button);
 
 export default {
   name: 'HelloWorld',

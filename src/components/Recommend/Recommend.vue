@@ -17,9 +17,11 @@
             <div class="img-wraper fl">
               <img class="needsclick" v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
             </div>
-            <div class="text fl">
-              <h4 class="text-title" v-html="item.creator.name"></h4>
-              <p class="desc" v-html="item.dissname"></p>
+            <div class="fl">
+              <div class="text">
+                <h4 class="text-title" v-html="item.creator.name"></h4>
+                <p class="desc" v-html="item.dissname"></p>
+              </div>
             </div>
           </li>
         </ul>
@@ -113,6 +115,7 @@ export default {
     .img-wraper {
       @include px2rem(width, 120);
       @include px2rem(height, 120);
+      margin-right: -100%;
 
       img {
         width: 100%;
@@ -121,6 +124,7 @@ export default {
     .text {
       text-align: left;
       @include px2rem(margin-left, 40);
+      margin-left: 80px;
 
       h4 {
         font-weight: bold;

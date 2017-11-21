@@ -26,6 +26,22 @@
 .icon-mine:before {
   content: "\e912";
 }
+.icon-music:before {
+  content: "\e905"
+}
+
+.icon-playlist:before {
+  content: "\e904"
+}
+
+.icon-favorite:before {
+  content: "\e909"
+}
+
+.icon-loop:before {
+  content: "\e90e"
+}
+
 
 
 /*
@@ -41,12 +57,6 @@ content: "\e902"
 .icon-play-mini:before
 content: "\e903"
 
-.icon-playlist:before
-content: "\e904"
-
-.icon-music:before
-content: "\e905"
-
 .icon-search:before
 content: "\e906"
 
@@ -55,9 +65,6 @@ content: "\e907"
 
 .icon-delete:before
 content: "\e908"
-
-.icon-favorite:before
-content: "\e909"
 
 .icon-not-favorite:before
 content: "\e90a"
