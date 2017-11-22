@@ -93,8 +93,7 @@ export default {
       let zIndex = 0;
       let blur = 0;
       const percent = Math.abs(newValue / this.imageHeight);
-      console.log(percent);
-      // 上拉
+      // 下拉
       if (newValue > 0) {
         scale = 1 + percent;
         zIndex = 10;
@@ -105,12 +104,12 @@ export default {
       this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
       this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`;
 
-      if (newValue < this.minTransalteY) {
+      if (newValue < this.minTransalteY) { // s上拉到顶部
         zIndex = 10;
         this.$refs.bgImage.style.paddingTop = 0;
         this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`;
         this.$refs.playBtn.style.display = 'none';
-      } else {
+      } else { // 开始下来 到初始位置
         this.$refs.bgImage.style.paddingTop = '70%';
         this.$refs.bgImage.style.height = 0;
         this.$refs.playBtn.style.display = '';
