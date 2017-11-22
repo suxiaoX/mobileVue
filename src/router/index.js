@@ -40,6 +40,12 @@ const Singer = resolve => {
   });
 };
 
+const SingerDetail = resolve => {
+  import('@/components/SingerDetail/SingerDetail').then(module => {
+    resolve(module);
+  });
+};
+
 const Rank = resolve => {
   import('@/components/Rank/Rank').then(module => {
     resolve(module);
@@ -57,54 +63,64 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      // name: 'home',
       redirect: '/find'
     },
     {
       path: '/find',
-      name: 'find',
       component: FindMusic,
       children: [
         {
           path: '/',
-          name: 'find',
+          // name: 'find',
           component: Recommend
         },
         {
           path: 'recommend',
-          name: 'recommend',
+          // name: 'recommend',
           component: Recommend
         },
         {
           path: 'singer',
-          name: 'singer',
-          component: Singer
+          // name: 'singer',
+          component: Singer,
+          children: [
+            {
+              path: ':id',
+              component: SingerDetail
+            }
+          ]
         },
         {
           path: 'rank',
-          name: 'rank',
+          // name: 'rank',
           component: Rank
         },
         {
           path: 'radio',
-          name: 'radio',
+          // name: 'radio',
           component: Radio
         }
       ]
     },
     {
+      path: '/search',
+      // name: 'search',
+      component: SingerDetail
+    },
+    {
       path: '/myMusic',
-      name: 'myMusic',
+      // name: 'myMusic',
       component: MyMusic
     },
     {
       path: '/amigo',
-      name: 'amigo',
+      // name: 'amigo',
       component: Amigo
     },
     {
       path: '/user',
-      name: 'user',
+      // name: 'user',
       component: User
     }
   ]

@@ -9,7 +9,7 @@
     </ul> -->
     <mt-index-list>
       <mt-index-section v-for="(group, index) in data" :key="index" :index="group.title">
-        <li class="singer-item" v-for="singer in group.items" :key="singer.id">
+        <li @click="selectItem(singer)" class="singer-item" v-for="singer in group.items" :key="singer.id">
           <img class="avatar" v-lazy="singer.avatar" :src="singer.avatar" >
           <span class="name">{{singer.name}}</span>
         </li>
@@ -39,12 +39,23 @@ export default {
   components: {
     BetterScroll,
     Loading
+  },
+  methods: {
+    selectItem (item) {
+      this.$emit('select', item)
+    }
   }
 }
 </script>
 <style lang="scss">
 .mint-indexlist-content {
   margin-right: 57px !important;
+  
+  .singer-item {
+    &:last-child {
+      padding-bottom: 45px;
+    }
+  }
 }
 .mint-indexsection {
   width: 100%;

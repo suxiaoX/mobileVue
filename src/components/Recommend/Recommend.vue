@@ -83,7 +83,7 @@ export default {
         }
       })
     },
-    loadImage() {
+    loadImage () {
       if (!this.checkloaded) {
         this.checkloaded = true
         this.$refs.scroll.refresh()

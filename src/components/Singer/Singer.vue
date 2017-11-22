@@ -1,9 +1,11 @@
 <template>
   <div class="singer" ref="singer">
-    <list-view :data="singers" ref="list"></list-view>
+    <list-view @select="selectSinger" :data="singers" ref="list"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 import ListView from '@/baseCom/ListView/ListView';
 import { getSingerList } from 'api/singer';
 import { ERR_OK } from 'api/config';
@@ -13,7 +15,7 @@ const HOT_NAME = '热门';
 const HOT_SINGER_LEN = 10;
 
 export default {
-  data() {
+  data () {
     return {
       singers: []
     }
@@ -25,14 +27,23 @@ export default {
     this._getSingerList()
   },
   methods: {
-    _getSingerList() {
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    selectSinger (singer) {
+      this.$router.push({
+        path: `/find/singer/${singer.id}`
+      })
+      this.setSinger(singer)
+    },
+    _getSingerList () {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
           this.singers = this._sortList(res.data.list);
         }
       })
     },
-    _sortList(list) {
+    _sortList (list) {
       let map = {
         hot: {
           title: HOT_NAME,
@@ -86,8 +97,20 @@ export default {
 
       return hot.concat(ret);
     }
-
-
   }
 }
 </script>
+
+<style lang="scss">
+  .singer {
+    position: fixed;
+    top: 84px;
+    bottom: 45px;
+    width: 100%;
+    z-index: 100;
+
+    .mint-indexlist-nav {
+      bottom: 45px;
+    }
+  }
+</style>

@@ -6,7 +6,9 @@
     <partial-link conf="find/rank" title="排行"></partial-link>
     <partial-link conf="find/radio" title="主播电台"></partial-link>
   </div>
-  <router-view></router-view>
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
 </div>
 </template>
 <script>
