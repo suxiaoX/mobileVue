@@ -42,7 +42,13 @@
   content: "\e90e"
 }
 
+.icon-back:before {
+  content: "\e911"
+}
 
+.icon-play:before {
+  content: "\e90c"
+}
 
 /*
 .icon-ok:before
@@ -72,8 +78,7 @@ content: "\e90a"
 .icon-pause:before
 content: "\e90b"
 
-.icon-play:before
-content: "\e90c"
+
 
 .icon-prev:before
 content: "\e90d"

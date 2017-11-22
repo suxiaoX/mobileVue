@@ -103,11 +103,10 @@ export default {
 
 <style lang="scss">
   .singer {
-    position: fixed;
-    top: 84px;
-    bottom: 45px;
+    position: absolute;
+    top: 0px;
+    margin-top: 45px;
     width: 100%;
-    z-index: 100;
 
     .mint-indexlist-nav {
       bottom: 45px;

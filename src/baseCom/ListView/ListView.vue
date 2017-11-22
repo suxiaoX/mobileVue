@@ -50,15 +50,13 @@ export default {
 <style lang="scss">
 .mint-indexlist-content {
   margin-right: 57px !important;
-  
-  .singer-item {
-    &:last-child {
-      padding-bottom: 45px;
-    }
-  }
 }
 .mint-indexsection {
   width: 100%;
+
+  &:last-child {
+    padding-bottom: 45px;
+  }
 }
 .mint-indexlist-navlist {
   height: 100%;
