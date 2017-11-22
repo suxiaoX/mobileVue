@@ -1,7 +1,9 @@
 <template>
   <div class="song-list">
-    <ul>
-      <li class="item" v-for="(song, index) in songs" :key="index">
+    <ul 
+        infinite-scroll-disabled="loading"
+        infinite-scroll-distance="10">
+      <li class="item" @click="selectItem(song, index)" v-for="(song, index) in songs" :key="index">
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{song.singer}}&nbsp;·&nbsp;{{song.album}}</p>
@@ -11,6 +13,10 @@
   </div>
 </template>
 <script>
+import Vue from 'vue';
+import { InfiniteScroll } from 'mint-ui';
+Vue.use(InfiniteScroll);
+
 export default {
   props: {
     songs: {
@@ -19,7 +25,9 @@ export default {
     }
   },
   methods: {
-   
+    selectItem(item, index) {
+      this.$emit('select', item, index)
+    },
   }
 }
 </script>

@@ -11,13 +11,17 @@
           <span class="text">随机播放全部</span>
         </div>
       </div>
+      <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <better-scroll :data="songs" 
+    <better-scroll :data="songs"
+                   @scroll="scroll"
                    :listen-scroll="listenScroll"
+                   class="list"
+                   ref="list"
                    :probe-type="probeType">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs"  @select="selectItem"></song-list>
       </div>
       <div v-show="!songs.length" class="loading-container">
         <loading></loading>
@@ -29,7 +33,15 @@
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 import Loading from '@/baseCom/Loading/Loading';
 import SongList from '@/baseCom/SongList/SongList';
+
+const RESERVED_HEIGHT = 40;
+
 export default {
+  data () {
+    return {
+      scrollY: 0
+    }
+  },
   props: {
     bgImage: {
       type: String,
@@ -58,9 +70,54 @@ export default {
     this.probeType = 3
     this.listenScroll = true
   },
+  mounted () {
+    this.imageHeight = this.$refs.bgImage.clientHeight;
+    this.minTransalteY = -this.imageHeight + RESERVED_HEIGHT
+    this.$refs.list.$el.style.top = `${this.imageHeight}px`;
+  },
   methods: {
     back() {
       this.$router.back();
+    },
+    selectItem(item, index) {
+      console.log(item, index);
+    },
+    scroll(pos) {
+      this.scrollY = pos.y;
+    },
+  },
+  watch: {
+    scrollY(newValue) {
+      let translateY = Math.max(this.minTransalteY, newValue);
+      let scale = 1;
+      let zIndex = 0;
+      let blur = 0;
+      const percent = Math.abs(newValue / this.imageHeight);
+      console.log(percent);
+      // 上拉
+      if (newValue > 0) {
+        scale = 1 + percent;
+        zIndex = 10;
+      } else {
+        blur = Math.min(20, percent * 20); // 取小的
+      }
+
+      this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
+      this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`;
+
+      if (newValue < this.minTransalteY) {
+        zIndex = 10;
+        this.$refs.bgImage.style.paddingTop = 0;
+        this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`;
+        this.$refs.playBtn.style.display = 'none';
+      } else {
+        this.$refs.bgImage.style.paddingTop = '70%';
+        this.$refs.bgImage.style.height = 0;
+        this.$refs.playBtn.style.display = '';
+      }
+
+      this.$refs.bgImage.style['transform'] = `scale(${scale})`;
+      this.$refs.bgImage.style.zIndex = zIndex;
     }
   }
 }
@@ -74,6 +131,7 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
+  z-index: 100;
   background: $color-background;
   
   .title {
@@ -108,6 +166,7 @@ export default {
     padding-top: 70%;
     transform-origin: top;
     background-size: cover;
+    // z-index: 1;
 
     .play-wrapper {
       position: absolute;
@@ -138,6 +197,42 @@ export default {
           font-size: $font-size-small;
         }
       }
+    }
+
+    .filter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7,17,27,0.4);
+    }
+  }
+
+  .bg-layer {
+    position: relative;
+    height: 100%;
+    background: $color-background;
+    // z-index: 2;
+  }
+     
+  .list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: $color-background;
+    // z-index: 3;
+
+    .song-list-wrapper{ 
+      padding: 20px 30px;
+    }
+        
+    .loading-container {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 }

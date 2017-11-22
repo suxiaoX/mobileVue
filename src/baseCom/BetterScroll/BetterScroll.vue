@@ -94,6 +94,7 @@
       data() {
         setTimeout(() => {
           this.refresh()
+          console.log(this.scroll.refresh());
         }, this.refreshDelay)
       }
     }
@@ -103,4 +104,3 @@
 <style scoped>
 
 </style>
-
