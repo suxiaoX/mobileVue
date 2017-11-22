@@ -33,6 +33,9 @@ export default {
     }
   },
   mounted () {
+    
+  },
+  created () {
     this._getSingerDetail();
   },
   methods: {

@@ -15,7 +15,7 @@
         </li>
       </mt-index-section>
     </mt-index-list>
-    <div v-show="!data.length" class="loading-container">
+    <div v-show="!data.length" class="loading-container loading-listview">
       <loading></loading>
     </div>
   </better-scroll>
@@ -79,5 +79,11 @@ export default {
     border-radius: 50%;
     margin: 0 20px;
   }
+}
+.loading-listview {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
 }
 </style>

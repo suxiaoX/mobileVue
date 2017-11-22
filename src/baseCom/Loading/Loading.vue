@@ -1,6 +1,6 @@
 <template>
 <div>
-  <mt-spinner type="fading-circle" color="blue"></mt-spinner>
+  <mt-spinner type="fading-circle" color="#666"></mt-spinner>
   <div>加载中...</div>
 </div>
 </template>

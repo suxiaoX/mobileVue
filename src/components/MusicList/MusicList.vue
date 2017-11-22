@@ -13,7 +13,9 @@
       </div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <better-scroll :data="songs">
+    <better-scroll :data="songs" 
+                   :listen-scroll="listenScroll"
+                   :probe-type="probeType">
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -51,6 +53,10 @@ export default {
     bgStyle() {
       return `background-image:url(${this.bgImage})`
     }
+  },
+   created() {
+    this.probeType = 3
+    this.listenScroll = true
   },
   methods: {
     back() {

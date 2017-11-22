@@ -23,8 +23,11 @@ export default {
   components: {
     ListView
   },
-  mounted () {
-    this._getSingerList()
+  // mounted () {
+    
+  // },
+  created () {
+    this._getSingerList();
   },
   methods: {
     ...mapMutations({

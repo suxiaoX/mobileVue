@@ -53,7 +53,11 @@ export default {
       loading: false
     }
   },
-  mounted () {
+  // mounted () {
+  //   this._getRecommend();
+  //   this._getDiscList();
+  // },
+  created () {
     this._getRecommend();
     this._getDiscList();
   },
@@ -65,9 +69,9 @@ export default {
   methods: {
     loadMore () {
       this.loading = true
-      setTimeout(() => {
-        console.log(22222);
-      }, 2500)
+      // setTimeout(() => {
+      //   console.log(22222);
+      // }, 2500)
     },
     _getRecommend () {
       getRecommend().then((res) => {
