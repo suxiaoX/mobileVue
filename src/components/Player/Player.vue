@@ -1,67 +1,78 @@
 <template>
   <div class="player" v-show="playlist.length>0">
-    <div class="normal-player" v-show="fullScreen">
-      <div class="top">
-        <div class="back">
-          <i class="icon-back" @click="hideNormal()"></i>
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"
+                @after-leave="afterLeave"
+    >
+      <div class="normal-player" v-show="fullScreen">
+        <div class="top">
+          <div class="back">
+            <i class="icon-back" @click="hideNormal()"></i>
+          </div>
+          <h2 class="title" v-html="currentSong.name"></h2>
+          <h4 class="subtitle" v-html="currentSong.singer"></h4>
         </div>
-        <h2 class="title" v-html="currentSong.name"></h2>
-        <h4 class="subtitle" v-html="currentSong.singer"></h4>
-      </div>
-      <div class="middle">
-        <div class="middle-l" ref="middleL">
-          <div class="cd-wrapper">
-            <div class="cd" :class="cdClass">
-              <img class="cd-img" :src="currentSong.image" alt="" />
+        <div class="middle">
+          <div class="middle-l" ref="middleL">
+            <div class="cd-wrapper" ref="cdWrapper">
+              <div class="cd" :class="cdClass">
+                <img class="cd-img" :src="currentSong.image" alt="" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="bottom">
-        <!-- <div class="dot-wrapper">
-          <span class="dot"></span>
-        </div> -->
-        <div class="progress-wrapper">
-          <span class="time time-l">{{format(currentTime)}}</span>
-          <div class="progress-bar-wrapper">
-            <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+        <div class="bottom">
+          <!-- <div class="dot-wrapper">
+            <span class="dot"></span>
+          </div> -->
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
-          <span class="time time-r">{{format(currentSong.duration)}}</span>
+          <div class="operators">
+            <div class="icon i-left" :class="disableCls">
+              <i class="icon-prev" @click="prevSong()"></i>
+            </div>
+            <div class="icon i-center" :class="disableCls">
+              <i :class="playIcon" @click="togglePlaying()"></i>
+            </div>
+            <div class="icon i-right" :class="disableCls">
+              <i class="icon-next" @click="nextSong()"></i>
+            </div>
+          </div>
         </div>
-        <div class="operators">
-          <div class="icon i-left" :class="disableCls">
-            <i class="icon-prev" @click="prevSong()"></i>
-          </div>
-          <div class="icon i-center" :class="disableCls">
-            <i :class="playIcon" @click="togglePlaying()"></i>
-          </div>
-          <div class="icon i-right" :class="disableCls">
-            <i class="icon-next" @click="nextSong()"></i>
-          </div>
+        <div class="back-img">
+          <img width="100%" height="100%" :src="currentSong.image" alt="" />
         </div>
       </div>
-      <div class="back-img">
-        <img width="100%" height="100%" :src="currentSong.image" alt="" />
+    </transition>
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="openNomal()">
+        <div class="icon">
+          <img :src="currentSong.image" :class="cdClass" width="40" height="40" alt="" />
+        </div>
+        <div class="text">
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
+        </div>
+        <div class="control">
+          <i @click.stop="togglePlaying()" class="icon-mini" :class="miniIcon"></i>
+        </div>
+        <!-- <div class="control" @click.stop=""></div> -->
       </div>
-    </div>
-    <div class="mini-player" v-show="!fullScreen" @click="openNomal()">
-      <div class="icon">
-        <img :src="currentSong.image" :class="cdClass" width="40" height="40" alt="" />
-      </div>
-      <div class="text">
-        <h2 class="name" v-html="currentSong.name"></h2>
-        <p class="desc" v-html="currentSong.singer"></p>
-      </div>
-      <div class="control">
-        <i @click.stop="togglePlaying()" class="icon-mini" :class="miniIcon"></i>
-      </div>
-      <!-- <div class="control" @click.stop=""></div> -->
-    </div>
+    </transition>
     <audio ref="audio" :src="currentSong.url" @play="ready" @error="errorPlay"  @timeupdate="updateTime" @ended="end"></audio>
   </div>  
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import animations from 'create-keyframe-animation';
+
 import ProgressBar from '@/baseCom/ProgressBar/ProgressBar';
 
 export default {
@@ -173,6 +184,68 @@ export default {
         this.togglePlaying()
       }
     },
+    // 运动函数 animations
+    enter(el, done) {
+      const {x, y, scale} = this._getPosAndScale();
+
+      let animation = {
+        0: {
+          transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+        },
+        60: {
+          transform: `translate3d(0,0,0) scale(1.1)`
+        },
+        100: {
+          transform: `translate3d(0,0,0) scale(1)`
+        }
+      };
+
+      animations.registerAnimation({
+        name: 'move',
+        animation,
+        presets: {
+          duration: 500,
+          easing: 'linear'
+        }
+      })
+
+      animations.runAnimation(this.$refs.cdWrapper, 'move', () => {
+        animations.unregisterAnimation('move');
+        this.$refs.cdWrapper.style.animation = '';
+      });
+    },
+    afterEnter() {
+      console.log('全部进入')
+      // animations.unregisterAnimation('move');
+      // this.$refs.cdWrapper.style.animation = '';
+      // this.$refs.cdWrapper.style.transform = '';
+    },
+    leave(el, done) { // 这个效果目前还没实现，尴尬
+      this.$refs.cdWrapper.style.transition = "all 0.5s";
+      const {x, y, scale} = this._getPosAndScale();
+      this.$refs.cdWrapper.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+      this.$refs.cdWrapper.addEventListener('transitionend', done);
+    },
+    afterLeave() {
+      this.$refs.cdWrapper.style.transition = '';
+      this.$refs.cdWrapper.style.transform = '';
+    },
+    _getPosAndScale() {
+      const targetWidth = 40; // 目标宽度，mini-player的图片宽度
+      const paddingLeft = 40; // 目标mini-player的图片离左边屏幕的距离
+      const paddingBottom = 30; // 目标mini-player的图片离底部屏幕的距离
+      const paddingTop = 30; // 目标mini-player的图片离父容器顶部的距离
+      const width = window.innerWidth * 0.8; // normal图片父容器的宽度
+      const scale = targetWidth / width; // 计算出两个图片的比列
+      const x = -((window.innerWidth / 2) - paddingLeft); // 计算出要移动的x方向的距离
+      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom; // 计算出要移动的y方向的距离
+      
+      return {
+        x,
+        y,
+        scale
+      }
+    },
     format(interval) {
       interval = interval | 0; //取整
       const minute = interval / 60 | 0;
@@ -230,6 +303,28 @@ export default {
     bottom: 0;
     z-index: 150;
     background: $color-background;
+
+    &.normal-enter-active,
+    &.normal-leave-avtive {
+      transition: all 0.4s;
+
+      .top,
+      .bottom {
+        transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+      }
+    }
+    &.normal-enter,
+    &.normal-leave-to {
+      opacity: 0;
+
+      .top {
+        transform: translate3d(0, -100px, 0);
+      }
+
+      .bottom {
+        transform: translate3d(0, 100px, 0);
+      }
+    }
 
     .top {
       position: relative;
@@ -412,6 +507,16 @@ export default {
     height: 60px;
     background: $color-highlight-background;
 
+    &.mini-enter-active,
+    &.mini-leave-active {
+       transition: all 0.4s;
+    }
+       
+    &.mini-enter,
+    &.mini-leave-to {
+       opacity: 0;
+    }
+       
     .icon {
       flex: 0 0 40px;
       width: 40px;
