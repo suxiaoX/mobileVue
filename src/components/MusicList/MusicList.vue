@@ -30,6 +30,7 @@
   </div> 
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 import Loading from '@/baseCom/Loading/Loading';
 import SongList from '@/baseCom/SongList/SongList';
@@ -76,11 +77,17 @@ export default {
     this.$refs.list.$el.style.top = `${this.imageHeight}px`;
   },
   methods: {
+    ...mapActions([
+      'selectPlay'
+    ]),
     back() {
       this.$router.back();
     },
     selectItem(item, index) {
-      console.log(item, index);
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
     },
     scroll(pos) {
       this.scrollY = pos.y;

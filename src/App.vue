@@ -1,20 +1,25 @@
 <template>
   <div id="app"  @touchmove.prevent>
     <m-header></m-header>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <m-footer></m-footer>
+    <player></player>
   </div>
 </template>
 
 <script>
 import mHeader from  '@/components/mHeader/mHeader';
 import mFooter from  '@/components/mFooter/mFooter';
+import Player from '@/components/Player/Player';
 
 export default {
   name: 'app',
   components: {
     mHeader,
-    mFooter
+    mFooter,
+    Player
   }
 }
 </script>

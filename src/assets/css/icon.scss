@@ -50,6 +50,14 @@
   content: "\e90c"
 }
 
+.icon-prev:before {
+  content: "\e90d"
+}
+
+.icon-next:before {
+  content: "\e913"
+}
+
 /*
 .icon-ok:before
 content: "\e900"
@@ -80,8 +88,7 @@ content: "\e90b"
 
 
 
-.icon-prev:before
-content: "\e90d"
+
 
 .icon-loop:before
 content: "\e90e"
@@ -98,8 +105,7 @@ content: "\e911"
 .icon-mine:before
 content: "\e912"
 
-.icon-next:before
-content: "\e913"
+
 
 .icon-dismiss:before
 content: "\e914"
