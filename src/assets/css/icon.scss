@@ -58,6 +58,19 @@
   content: "\e913"
 }
 
+.icon-pause:before {
+  content: "\e90b"
+}
+
+.icon-play-mini:before {
+  content: "\e903"
+}
+
+.icon-pause-mini:before {
+  content: "\e915"
+}
+
+
 /*
 .icon-ok:before
 content: "\e900"
@@ -68,8 +81,7 @@ content: "\e901"
 .icon-add:before
 content: "\e902"
 
-.icon-play-mini:before
-content: "\e903"
+
 
 .icon-search:before
 content: "\e906"
@@ -83,8 +95,7 @@ content: "\e908"
 .icon-not-favorite:before
 content: "\e90a"
 
-.icon-pause:before
-content: "\e90b"
+
 
 
 
@@ -110,6 +121,5 @@ content: "\e912"
 .icon-dismiss:before
 content: "\e914"
 
-.icon-pause-mini:before
-content: "\e915"
+
 */
