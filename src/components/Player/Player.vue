@@ -24,7 +24,7 @@
         <div class="progress-wrapper">
           <span class="time time-l">{{format(currentTime)}}</span>
           <div class="progress-bar-wrapper">
-            <progress-bar :percent="percent"></progress-bar>
+            <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
           </div>
           <span class="time time-r">{{format(currentSong.duration)}}</span>
         </div>
@@ -57,7 +57,7 @@
       </div>
       <!-- <div class="control" @click.stop=""></div> -->
     </div>
-    <audio ref="audio" :src="currentSong.url" @play="ready" @error="errorPlay"  @timeupdate="updateTime" @end="end"></audio>
+    <audio ref="audio" :src="currentSong.url" @play="ready" @error="errorPlay"  @timeupdate="updateTime" @ended="end"></audio>
   </div>  
 </template>
 <script>
@@ -164,6 +164,14 @@ export default {
     errorPlay() {
       // 加载失败，或者网络错误等
       this.songReady = true;
+    },
+    onProgressBarChange(percent) { // 拖拽进度条
+      const currentTime = this.currentSong.duration * percent;
+      this.$refs.audio.currentTime = currentTime;
+
+      if (!this.playing) {
+        this.togglePlaying()
+      }
     },
     format(interval) {
       interval = interval | 0; //取整
