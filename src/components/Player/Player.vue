@@ -14,7 +14,11 @@
           <h2 class="title" v-html="currentSong.name"></h2>
           <h4 class="subtitle" v-html="currentSong.singer"></h4>
         </div>
-        <div class="middle">
+        <div class="middle"
+             @touchstart.prevent="middleTouchStart"
+             @touchmove.prevent="middleTouchMove"
+             @touchend="middleTouchEnd"
+              >
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" :class="cdClass">
@@ -22,11 +26,13 @@
               </div>
             </div>
           </div>
+          <div class="middle-r" ref="middleR">我是右边的歌词</div>
         </div>
         <div class="bottom">
-          <!-- <div class="dot-wrapper">
-            <span class="dot"></span>
-          </div> -->
+          <div class="dot-wrapper">
+            <span class="dot" :class="{'active':currentShow==='cd'}"></span>
+            <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
+          </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
@@ -93,12 +99,16 @@ export default {
     return {
       songReady: false,
       currentTime: 0,
-      radius: 32
+      radius: 32,
+      currentShow: 'cd'
     }
   },
   components: {
     ProgressBar,
     ProgressCircle
+  },
+  created () {
+    this.touch = {}
   },
   computed: {
     ...mapGetters([
@@ -311,6 +321,74 @@ export default {
       }
       return num
     },
+    // 滑动显示歌词或者CD
+    middleTouchStart(e) {
+      this.touch.initiated = true;
+      // 判断是否是一次移动
+      this.touch.moved = false;
+      const touch = e.touches[0];
+      this.touch.startX = touch.pageX;
+      this.touch.startY = touch.pageY;
+    },
+    middleTouchMove(e) {
+      if (!this.touch.initiated) {
+        return
+      }
+      const touch = e.touches[0];
+      const moveXsize = touch.pageX - this.touch.startX;
+      const moveYsize = touch.pageY - this.touch.startY;
+      // 上滑
+      if (Math.abs(moveYsize) > Math.abs(moveXsize)) {
+        return
+      }
+      if (!this.touch.moved) {
+        this.touch.moved = true;
+      }
+      // 判断 middle的位置，如果在第一个CD 那么就是原始位置，在显示歌词位置，就是移动一个屏幕的距离
+      const left = this.currentShow === 'cd' ? 0 : -window.innerWidth;
+      // 获取位移的距离
+      const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + moveXsize));
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
+      this.$refs.middleR.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
+      this.$refs.middleR.style.transitionDuration = 0;
+      this.$refs.middleL.style.opacity = 1 - this.touch.percent;
+      this.$refs.middleR.style.transitionDuration = 0;
+
+    },
+    middleTouchEnd() {
+      if (!this.touch.moved) {
+        return
+      }
+      let offsetWidth;
+      let opacity;
+      // 判断左滑，或者右滑 左滑动 @percent是一个递增的过程，右滑动 @percent是一个递减的过程，
+      if (this.currentShow === 'cd') {
+        if (this.touch.percent > 0.2) {
+          offsetWidth = -window.innerWidth;
+          opacity = 0;
+          this.currentShow = 'lyric';
+        } else {
+          offsetWidth = 0;
+          opacity = 1;
+        }
+      } else {
+        if (this.touch.percent < 0.8) {
+          offsetWidth = 0;
+          this.currentShow = 'cd';
+          opacity = 1;
+        } else {
+          offsetWidth = -window.innerWidth;
+          opacity = 0;
+        }
+      }
+
+      const delay = 350;
+      this.$refs.middleR.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
+      this.$refs.middleR.style.transitionDuration = `${delay}ms`;
+      this.$refs.middleL.style.opacity = opacity;
+      this.$refs.middleL.transitionDuration = `${delay}ms`;
+      this.touch.initiated = false;
+    }
   },
   watch: {// 采用监听的方式，去实现下一首，上一首，暂停等功能
     currentSong(newSong, oldSong) {
@@ -431,6 +509,15 @@ export default {
         padding-top: 80%;
       }
 
+      .middle-r {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-size: $font-size-medium
+      }
+
       .cd-wrapper {
         position: absolute;
         left: 10%;
@@ -468,6 +555,29 @@ export default {
       position: absolute;
       bottom: 40px;
       width: 100%;
+
+      .dot-wrapper {
+        text-align: center;
+        font-size: 0;
+        padding: 10px 0;
+
+        .dot {
+           display: inline-block;
+            vertical-align: middle;
+            margin: 0 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $color-text-l;
+
+            &.active {
+              width: 20px;
+              border-radius: 5px;
+              background: $color-text-ll;
+            }
+             
+        }
+      }
 
       .progress-wrapper {
         display: flex;
