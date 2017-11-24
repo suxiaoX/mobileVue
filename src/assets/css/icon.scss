@@ -38,8 +38,8 @@
   content: "\e909"
 }
 
-.icon-loop:before {
-  content: "\e90e"
+.icon-not-favorite:before {
+  content: "\e90a"
 }
 
 .icon-back:before {
@@ -71,6 +71,18 @@
 }
 
 
+.icon-loop:before {
+  content: "\e90e"
+}
+
+.icon-sequence:before {
+  content: "\e90f"
+}
+
+.icon-random:before {
+  content: "\e910"
+}
+
 /*
 .icon-ok:before
 content: "\e900"
@@ -92,8 +104,6 @@ content: "\e907"
 .icon-delete:before
 content: "\e908"
 
-.icon-not-favorite:before
-content: "\e90a"
 
 
 
@@ -101,14 +111,8 @@ content: "\e90a"
 
 
 
-.icon-loop:before
-content: "\e90e"
 
-.icon-sequence:before
-content: "\e90f"
 
-.icon-random:before
-content: "\e910"
 
 .icon-back:before
 content: "\e911"

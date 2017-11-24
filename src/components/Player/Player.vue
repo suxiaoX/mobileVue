@@ -35,6 +35,9 @@
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
+            <div class="icon i-left" :class="disableCls" @click="changeMode">
+              <i :class="iconMode"></i>
+            </div>
             <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click="prevSong()"></i>
             </div>
@@ -43,6 +46,9 @@
             </div>
             <div class="icon i-right" :class="disableCls">
               <i class="icon-next" @click="nextSong()"></i>
+            </div>
+            <div class="icon i-right" :class="disableCls">
+              <i class="icon-not-favorite"></i>
             </div>
           </div>
         </div>
@@ -61,9 +67,13 @@
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <i @click.stop="togglePlaying()" class="icon-mini" :class="miniIcon"></i>
+          <progress-circle :radius="radius" :percent="percent">
+             <i @click.stop="togglePlaying()" class="icon-mini" :class="miniIcon"></i>
+          </progress-circle>     
         </div>
-        <!-- <div class="control" @click.stop=""></div> -->
+        <div class="control">
+          <i class="icon-playlist"></i>
+        </div>
       </div>
     </transition>
     <audio ref="audio" :src="currentSong.url" @play="ready" @error="errorPlay"  @timeupdate="updateTime" @ended="end"></audio>
@@ -73,17 +83,21 @@
 import { mapGetters, mapMutations } from 'vuex';
 import animations from 'create-keyframe-animation';
 
+import { playMode } from 'common/tools/config';
 import ProgressBar from '@/baseCom/ProgressBar/ProgressBar';
+import ProgressCircle from '@/baseCom/ProgressCircle/ProgressCircle';
 
 export default {
   data () {
     return {
       songReady: false,
       currentTime: 0,
+      radius: 32
     }
   },
   components: {
-    ProgressBar
+    ProgressBar,
+    ProgressCircle
   },
   computed: {
     ...mapGetters([
@@ -91,8 +105,12 @@ export default {
       'fullScreen',
       'playing',
       'currentSong',
-      'playlist'
+      'playlist',
+      'mode'
     ]),
+    iconMode() {
+      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
+    },
     playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play';
     },
@@ -113,7 +131,9 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayingState: 'SET_PLAYING_STATE'
+      setPlayingState: 'SET_PLAYING_STATE',
+      setPlayMode: 'SET_PLAY_MODE'
+
     }),
     hideNormal() {
       this.setFullScreen(false);
@@ -126,6 +146,11 @@ export default {
         return
       }
       this.setPlayingState(!this.playing);
+    },
+    loop () { // 循环播放
+      this.$refs.audio.currentTime = 0;
+      this.$refs.audio.play();
+      this.setPlayingState(true);
     },
     nextSong() {
       if (!this.songReady) {
@@ -229,6 +254,10 @@ export default {
     afterLeave() {
       this.$refs.cdWrapper.style.transition = '';
       this.$refs.cdWrapper.style.transform = '';
+    },
+    changeMode() {
+      const mode = (this.mode + 1) % 3;
+      this.setPlayMode(mode);
     },
     _getPosAndScale() {
       const targetWidth = 40; // 目标宽度，mini-player的图片宽度
@@ -415,7 +444,7 @@ export default {
 
     .bottom {
       position: absolute;
-      bottom: 50px;
+      bottom: 40px;
       width: 100%;
 
       .progress-wrapper {
@@ -571,6 +600,9 @@ export default {
           
       .icon-mini {
         font-size: 32px;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
   }
