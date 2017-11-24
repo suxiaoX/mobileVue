@@ -84,6 +84,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import animations from 'create-keyframe-animation';
 
 import { playMode } from 'common/tools/config';
+import { rearRange } from 'common/tools/util';
 import ProgressBar from '@/baseCom/ProgressBar/ProgressBar';
 import ProgressCircle from '@/baseCom/ProgressCircle/ProgressCircle';
 
@@ -106,7 +107,8 @@ export default {
       'playing',
       'currentSong',
       'playlist',
-      'mode'
+      'mode',
+      'sequenceList'
     ]),
     iconMode() {
       return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
@@ -132,7 +134,8 @@ export default {
       setFullScreen: 'SET_FULL_SCREEN',
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayingState: 'SET_PLAYING_STATE',
-      setPlayMode: 'SET_PLAY_MODE'
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlaylist: 'SET_PLAYLIST'
 
     }),
     hideNormal() {
@@ -157,6 +160,7 @@ export default {
         return
       }
       if (this.playlist.length === 1) {
+        this.loop();
         return
       } else {
         let index = this.currentIndex + 1;
@@ -194,8 +198,12 @@ export default {
       // 歌曲准备好了才开始播放
       this.songReady = true;
     },
-    end() {
-      this.nextSong();
+    end() { // 播放模式为单曲循环的时候，结束后重新开始
+      if (this.mode === playMode.loop) {
+        this.loop();
+      } else {
+        this.nextSong();
+      }
     },
     errorPlay() {
       // 加载失败，或者网络错误等
@@ -258,6 +266,20 @@ export default {
     changeMode() {
       const mode = (this.mode + 1) % 3;
       this.setPlayMode(mode);
+      let list = null;
+      if (this.mode === playMode.random) {
+        list = rearRange(this.sequenceList);
+      } else {
+        list = this.sequenceList;
+      }
+      this._resetCurrendIndex(list);
+      this.setPlaylist(list);
+    },
+    _resetCurrendIndex(list) {
+      let index = list.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index)
     },
     _getPosAndScale() {
       const targetWidth = 40; // 目标宽度，mini-player的图片宽度
