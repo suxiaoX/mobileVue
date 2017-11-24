@@ -242,6 +242,9 @@ export default {
       if (!this.playing) {
         this.togglePlaying()
       }
+      if (this.currentLyric) {
+        this.currentLyric.seek(currentTime * 500)
+      }
     },
     // 运动函数 animations
     enter(el, done) {
@@ -407,7 +410,10 @@ export default {
     },
     getLyric() {
       this.currentSong.getLyric().then(lyric => {
-        this.currentLyric = new Lyric(lyric, this.handleLyric)
+        this.currentLyric = new Lyric(lyric, this.handleLyric);
+        if (this.playing) {
+          this.currentLyric.play()
+        }
       }).catch(() => {
         console.log('no lyric')
         this.currentLyric = null;
@@ -419,12 +425,11 @@ export default {
       this.currentLineNum = lineNum;
       if (lineNum > 5) {
         let lineEl = this.$refs.lyricLine[lineNum - 5];
-        console.log(lineEl);
-        this.$refs.lyricList.scrollToElement(lineEl, 1000);
+        this.$refs.middleR.scrollToElement(lineEl, 500);
       } else {
-        this.$refs.lyricList.scrollTo(0, 0, 1000);
+        this.$refs.middleR.scrollTo(0, 0, 500);
       }
-      this.playingLyric = txt
+      this.playingLyric = txt;
     },
   },
   watch: {// 采用监听的方式，去实现下一首，上一首，暂停等功能
@@ -434,6 +439,12 @@ export default {
       }
       if(newSong.id === oldSong.id) {
         return
+      }
+      if (this.currentLyric) {
+        this.currentLyric.stop()
+        this.currentTime = 0
+        this.playingLyric = ''
+        this.currentLineNum = 0
       }
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
