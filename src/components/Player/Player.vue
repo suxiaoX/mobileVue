@@ -26,7 +26,17 @@
               </div>
             </div>
           </div>
-          <div class="middle-r" ref="middleR">我是右边的歌词</div>
+          <better-scroll class="middle-r" ref="middleR" :data="currentLyric && currentLyric.lines">
+            <div class="lyric-wrapper">
+              <div v-if="currentLyric">
+                <p ref="lyricLine"
+                    class="text"
+                    :class="{'current': currentLineNum === index}"
+                    :key="index"
+                    v-for="(line, index) in currentLyric.lines">{{line.txt}}</p>
+              </div>
+            </div>
+          </better-scroll>
         </div>
         <div class="bottom">
           <div class="dot-wrapper">
@@ -88,11 +98,13 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import animations from 'create-keyframe-animation';
+import Lyric from 'lyric-parser';
 
 import { playMode } from 'common/tools/config';
 import { rearRange } from 'common/tools/util';
 import ProgressBar from '@/baseCom/ProgressBar/ProgressBar';
 import ProgressCircle from '@/baseCom/ProgressCircle/ProgressCircle';
+import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 
 export default {
   data () {
@@ -100,12 +112,16 @@ export default {
       songReady: false,
       currentTime: 0,
       radius: 32,
-      currentShow: 'cd'
+      currentShow: 'cd',
+      currentLyric: null,
+      currentLineNum: 0,
+      playingLyric: ''
     }
   },
   components: {
     ProgressBar,
-    ProgressCircle
+    ProgressCircle,
+    BetterScroll
   },
   created () {
     this.touch = {}
@@ -349,10 +365,10 @@ export default {
       // 获取位移的距离
       const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + moveXsize));
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
-      this.$refs.middleR.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
-      this.$refs.middleR.style.transitionDuration = 0;
+      this.$refs.middleR.$el.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
+      this.$refs.middleR.$el.style.transitionDuration = 0;
       this.$refs.middleL.style.opacity = 1 - this.touch.percent;
-      this.$refs.middleR.style.transitionDuration = 0;
+      this.$refs.middleL.style.transitionDuration = 0;
 
     },
     middleTouchEnd() {
@@ -383,12 +399,33 @@ export default {
       }
 
       const delay = 350;
-      this.$refs.middleR.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
-      this.$refs.middleR.style.transitionDuration = `${delay}ms`;
+      this.$refs.middleR.$el.style.transform = `translate3d(${offsetWidth}px, 0, 0)`;
+      this.$refs.middleR.$el.style.transitionDuration = `${delay}ms`;
       this.$refs.middleL.style.opacity = opacity;
       this.$refs.middleL.transitionDuration = `${delay}ms`;
       this.touch.initiated = false;
-    }
+    },
+    getLyric() {
+      this.currentSong.getLyric().then(lyric => {
+        this.currentLyric = new Lyric(lyric, this.handleLyric)
+      }).catch(() => {
+        console.log('no lyric')
+        this.currentLyric = null;
+        this.playingLyric = '';
+        this.currentLineNum = 0;
+      })
+    },
+    handleLyric({lineNum, txt}) {
+      this.currentLineNum = lineNum;
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5];
+        console.log(lineEl);
+        this.$refs.lyricList.scrollToElement(lineEl, 1000);
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000);
+      }
+      this.playingLyric = txt
+    },
   },
   watch: {// 采用监听的方式，去实现下一首，上一首，暂停等功能
     currentSong(newSong, oldSong) {
@@ -401,7 +438,12 @@ export default {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         this.$refs.audio.play();
+        this.getLyric();
       }, 1000);
+      // this.$nextTick(() => {
+      //   this.$refs.audio.play();
+      //   this.getLyric();
+      // })
     },
     playing(newPlaying) {
       const audio = this.$refs.audio;
@@ -515,7 +557,24 @@ export default {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        font-size: $font-size-medium
+        font-size: $font-size-medium;
+
+        .lyric-wrapper {
+          width: 80%;
+          margin: 0 auto;
+          overflow: hidden;
+          text-align: center;
+
+          .text {
+            line-height: 32px;
+            color: $color-text-l;
+            font-size: $font-size-medium;
+
+            &.current {
+              color: $color-text;
+            }
+          }
+        }
       }
 
       .cd-wrapper {
