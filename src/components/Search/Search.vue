@@ -13,20 +13,34 @@
       </better-scroll>
     </div>
     <div class="search-result">
-
+      <ul>
+        <li></li>
+      </ul>
     </div>
   </div>
 </template>
 <script>
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
-import { getHotKey } from 'api/search.js';
+import { getHotKey, search } from 'api/search.js';
 import { ERR_OK } from 'api/config.js';
+
+const TYPE_SINGER = 'TYPE_SINGER';
+const perpage = 20;
 
 export default {
   data () {
     return {
-      hotKey: []  
+      query: '',
+      hotKey: [],
+      page: 1,
+      hasMore: true
+    }
+  },
+  props: {
+    showSinger: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -46,11 +60,21 @@ export default {
           this.hotKey = res.data.hotkey.slice(0, 10)
         }
       })
+    },
+    search() {
+      this.page = 1;
+      this.hasMore = true;
+      search(this.query, this.page, this.showSinger, perpage).then(res => {
+        if(res.code === ERR_OK) {
+          console.log(res.data);
+        }
+      })
     }
   },
   watch: {
     query(newQuery) {
       if (newQuery) {
+        this.search();
         console.log(2121212)
       }
     }

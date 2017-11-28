@@ -2,7 +2,7 @@
   <div class="search-box">
     <i class="icon-search"></i>
     <input ref="query" v-model="query" class="box" :placeholder="placeholder" @focus="focus" />
-    <i class="icon-dismiss"></i>
+    <i class="icon-dismiss" @click="clear" v-show="query"></i>
   </div>
 </template>
 <script>
@@ -30,6 +30,7 @@ export default {
     },
     focus() {
       this.$router.push('/search');
+      this.$emit('show', true);
     },
     created () {
       this.$watch('query', (newQuery) => {
@@ -52,29 +53,37 @@ export default {
   padding: 0 6px;
   height: 40px;
   background: #eee;
+  position: relative;
   // border-bottom: 1px solid #666;
   // border-radius: 6px;
   
   .icon-search {
     font-size: 24px;
     color: $color-background;
+    position: absolute;
+    left: 12px;
   }
     
   .box {
     flex: 1;
     margin: 0 5px;
-    line-height: 18px;
+    line-height: normal;
+    height: 26px;
     // background: $color-highlight-background;
     color: #666;
     font-size: $font-size-medium;
+    border-radius: 26px;
+    padding-left: 25px; 
     &::placeholder {
-      color: $color-text-d;
+      color: #989;
     }
   }
     
   .icon-dismiss {
     font-size: 16px;
     color: $color-background;
+    position: absolute;
+    right: 20px;
   }
 }
     

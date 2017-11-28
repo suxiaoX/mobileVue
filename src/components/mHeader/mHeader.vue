@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <search-box></search-box>
+    <search-box @show="show"></search-box>
     <!-- <mt-header fixed :title="msg"> -->
       <!-- <router-link to="/" slot="left">
         <mt-button icon="back">返回</mt-button>
@@ -11,6 +11,7 @@
       <mt-button icon="more" slot="right"></mt-button> -->
     <!-- </mt-header> -->
     <!-- <Search /> -->
+    <div class="cancle" @click="cancle()" v-show="showCancle">取消</div>
   </div>
 </template>
 <script>
@@ -18,15 +19,16 @@ import Vue from 'vue';
 // import navbar from '@/components/Navbar/navbar';
 // import Search from '@/baseCom/Search/Search';
 import SearchBox from '@/baseCom/SearchBox/SearchBox';
-import { Header, Button } from 'mint-ui';
-Vue.component(Header.name, Header);
-Vue.component(Button.name, Button);
+// import { Header, Button } from 'mint-ui';
+// Vue.component(Header.name, Header);
+// Vue.component(Button.name, Button);
 
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome'
+      msg: 'Welcome',
+      showCancle: false
     }
   },
   components: {
@@ -35,6 +37,13 @@ export default {
   methods: {
     handleClose () {
       console.log('hahah')
+    },
+    show(bool) {
+      this.showCancle = bool;
+    },
+    cancle() {
+      this.showCancle = false;
+      this.$router.go(-1);
     }
   }
 }
@@ -49,6 +58,14 @@ export default {
   left: 0;
   right: 0;
   height: 44px;
+  display: flex;
+  align-items: center;
+  background: #eee;
+  
+  .cancle {
+    width: 10%;
+    padding-right: 10px;
+  }
 }
 // h1, h2 {
 //   font-weight: normal;
