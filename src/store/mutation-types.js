@@ -11,3 +11,7 @@ export const SET_SEQUENCE_LIST = 'SET_SEQUENCE_LIST';
 export const SET_PLAY_MODE = 'SET_PLAY_MODE';
 // 设置当前播放歌曲在列表的index
 export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX';
+// 设置推荐页面进入播放页面的歌单列表
+export const SET_DISC = 'SET_DISC';
+// 设置排名进入播放页面的歌单列表
+export const SET_TOP_LIST = 'SET_TOP_LIST';

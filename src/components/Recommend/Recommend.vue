@@ -9,11 +9,12 @@
       </swipe>
       <div class="hot-music">
         <h3 class="title">热门歌单推荐</h3>
-        <ul v-infinite-scroll="loadMore"
+        <!-- <ul v-infinite-scroll="loadMore"
             infinite-scroll-disabled="loading"
             infinite-scroll-distance="10"
-            class="recommend-list">
-          <li v-for="item in this.discList" :key="item.id" class="music-info clearfix">
+            class="recommend-list"> -->
+        <ul class="recommend-list">
+          <li v-for="item in this.discList" @click="selectItem(item)" :key="item.id" class="music-info clearfix">
             <div class="img-wraper fl">
               <img class="needsclick" v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
             </div>
@@ -30,10 +31,12 @@
         </div>
       </div>
     </better-scroll>
+    <router-view></router-view>
   </div>
 </template>
 <script>
 import Vue from 'vue';
+import { mapMutations } from 'vuex';
 import Swipe from '@/baseCom/Swipe/Swipe';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
@@ -49,8 +52,7 @@ export default {
   data () {
     return {
       recomends: [],
-      discList: [],
-      loading: false
+      discList: []
     }
   },
   // mounted () {
@@ -67,12 +69,17 @@ export default {
     BetterScroll
   },
   methods: {
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    }),
+    /*
     loadMore () {
       this.loading = true
       // setTimeout(() => {
       //   console.log(22222);
       // }, 2500)
     },
+    */
     _getRecommend () {
       getRecommend().then((res) => {
         if (res.code === ERR_OK) {
@@ -86,6 +93,10 @@ export default {
           this.discList = res.data.list;
         }
       })
+    },
+    selectItem(item) {
+      this.setDisc(item);
+      this.$router.push(`/find/recommend/${item.dissid}`);
     },
     loadImage () {
       if (!this.checkloaded) {

@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { resolve } from 'path';
+// import { resolve } from '../../../../Library/Caches/typescript/2.6/node_modules/@types/q';
 // import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router);
@@ -34,6 +36,12 @@ const Recommend = resolve => {
   });
 };
 
+const Disc = resolve => {
+  import('@/components/Disc/Disc').then(module => {
+    resolve(module);
+  })
+}
+
 const Singer = resolve => {
   import('@/components/Singer/Singer').then(module => {
     resolve(module);
@@ -51,6 +59,12 @@ const Rank = resolve => {
     resolve(module);
   });
 };
+
+const TopList = resolve => {
+  import('@/components/TopList/TopList').then(module => {
+    resolve(module);
+  })
+}
 
 const Radio = resolve => {
   import('@/components/Radio/Radio').then(module => {
@@ -78,7 +92,13 @@ export default new Router({
         {
           path: 'recommend',
           // name: 'recommend',
-          component: Recommend
+          component: Recommend,
+          children: [
+            {
+              path: ':id',
+              component: Disc
+            }
+          ]
         },
         {
           path: 'singer',
@@ -94,7 +114,13 @@ export default new Router({
         {
           path: 'rank',
           // name: 'rank',
-          component: Rank
+          component: Rank,
+          children: [
+            {
+              path: ':id',
+              component: TopList
+            }
+          ]
         },
         {
           path: 'radio',
