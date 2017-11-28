@@ -72,6 +72,12 @@ const Radio = resolve => {
   });
 };
 
+const Search = resolve => {
+  import('@/components/Search/Search').then(module => {
+    resolve(module);
+  })
+}
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -132,7 +138,13 @@ export default new Router({
     {
       path: '/search',
       // name: 'search',
-      component: SingerDetail
+      component: Search,
+      children: [
+        {
+          path: ':id',
+          component: SingerDetail
+        }
+      ]
     },
     {
       path: '/myMusic',
