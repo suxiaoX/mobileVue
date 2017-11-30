@@ -6,6 +6,8 @@
   </div>
 </template>
 <script>
+import { mapMutations, mapGetters } from 'vuex';
+
 export default {
   data () {
     return {
@@ -18,24 +20,45 @@ export default {
       default: '搜索歌曲、歌手'
     }
   },
+  // computed: {
+  //   ...mapGetters([
+  //     'keywords'
+  //   ])
+  // },
   methods: {
+    ...mapMutations({
+      setKeywords: 'SET_KEYWORDS'
+    }),
     clear() {
       this.query = '';
     },
-    setQuery(query) {
-      this.query = query;
-    },
+    // setQuery(query) {
+    //   this.query = query;
+    // },
     blur() {
       this.$refs.query.blur();
     },
     focus() {
       this.$router.push('/search');
       this.$emit('show', true);
+    }
+  },
+  created () {
+    this.$watch('query', (newQuery) => {
+      this.$emit('query', newQuery);
+    })
+  },
+   computed: {
+    ...mapGetters([
+      'keywords'
+    ])
+  },
+  watch: {
+    query(newValue) {
+      this.setKeywords(newValue);
     },
-    created () {
-      this.$watch('query', (newQuery) => {
-        this.$emit('query', newQuery);
-      })
+    keywords(newValue) {
+      this.query = newValue;
     }
   }
 }

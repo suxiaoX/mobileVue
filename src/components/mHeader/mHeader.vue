@@ -15,9 +15,10 @@
   </div>
 </template>
 <script>
-import Vue from 'vue';
+// import Vue from 'vue';
 // import navbar from '@/components/Navbar/navbar';
 // import Search from '@/baseCom/Search/Search';
+import { mapMutations, mapGetters } from 'vuex';
 import SearchBox from '@/baseCom/SearchBox/SearchBox';
 // import { Header, Button } from 'mint-ui';
 // Vue.component(Header.name, Header);
@@ -35,6 +36,12 @@ export default {
     SearchBox
   },
   methods: {
+    ...mapMutations({
+      setQuery: 'SET_QUERY'
+    }),
+    handleSetQuery(query) {
+      this.setQuery(query);
+    },
     handleClose () {
       console.log('hahah')
     },
@@ -44,6 +51,16 @@ export default {
     cancle() {
       this.showCancle = false;
       this.$router.go(-1);
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'keywords'
+    ])
+  },
+  watch: {
+    keywords(newValue) {
+      console.log(newValue);
     }
   }
 }

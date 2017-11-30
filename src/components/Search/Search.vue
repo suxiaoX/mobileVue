@@ -1,28 +1,28 @@
 <template>
   <div class="search">
-    <div class="shortcut-wrapper">
+    <div class="shortcut-wrapper" v-show="!this.$store.state.keywords">
       <better-scroll ref="shortcut" class="shortcut">
         <div class="hot-key">
           <h3 class="title">热门搜索</h3>
           <ul>
-            <li class="item" v-for="(item, index) in hotKey" :key="index">
+            <li class="item" @click="addKeywords(item.k)" v-for="(item, index) in hotKey" :key="index">
               <span>{{item.k}}</span>
             </li>
           </ul>
         </div>
       </better-scroll>
     </div>
-    <div class="search-result">
-      <ul>
-        <li></li>
-      </ul>
+    <div class="search-result" v-show="this.$store.state.keywords" ref="searchResult">
+      <search-result ref="suggest"></search-result>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
-import { getHotKey, search } from 'api/search.js';
+import SearchResult from '@/components/SearchResult/SearchResult';
+import { getHotKey } from 'api/search.js';
 import { ERR_OK } from 'api/config.js';
 
 const TYPE_SINGER = 'TYPE_SINGER';
@@ -31,7 +31,7 @@ const perpage = 20;
 export default {
   data () {
     return {
-      query: '',
+      query: this.$store.state.keywords,
       hotKey: [],
       page: 1,
       hasMore: true
@@ -45,13 +45,16 @@ export default {
   },
   components: {
     Loading,
-    BetterScroll
+    BetterScroll,
+    SearchResult
   },
   created () {
     this._getHotkey();
   },
   computed: {
-    
+    ...mapGetters([
+      'keywords'
+    ])
   },
   methods: {
     _getHotkey() {
@@ -61,23 +64,12 @@ export default {
         }
       })
     },
-    search() {
-      this.page = 1;
-      this.hasMore = true;
-      search(this.query, this.page, this.showSinger, perpage).then(res => {
-        if(res.code === ERR_OK) {
-          console.log(res.data);
-        }
-      })
-    }
-  },
-  watch: {
-    query(newQuery) {
-      if (newQuery) {
-        this.search();
-        console.log(2121212)
-      }
-    }
+    addKeywords(keyword) {
+      this.setKeywords(keyword);
+    },
+    ...mapMutations({
+      setKeywords: 'SET_KEYWORDS'
+    }),
   }
 }
 </script>
@@ -139,8 +131,9 @@ export default {
   .search-result{
     position: fixed;
     width: 100%;
-    top: 178px;
+    top: 45px;
     bottom: 0;
+    background: $color-background;
   }
 }
 </style>

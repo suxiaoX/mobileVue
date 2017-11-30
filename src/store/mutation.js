@@ -27,6 +27,9 @@ const mutations = {
   },
   [types.SET_TOP_LIST] (state, topList) {
     state.topList = topList;
+  },
+  [types.SET_KEYWORDS] (state, keywords) {
+    state.keywords = keywords;
   }
 };
 
