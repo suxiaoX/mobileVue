@@ -49,6 +49,7 @@ export default {
     }
   },
   created () {
+    // 节流
     this.$watch('query', debounce((newQuery) => {
       this.setKeywords(newQuery);
     }, 200));
@@ -62,6 +63,7 @@ export default {
     ])
   },
   watch: {
+    // 节流
     query(newValue) {
       debounce(newValue => {
         this.setKeywords(newValue);
