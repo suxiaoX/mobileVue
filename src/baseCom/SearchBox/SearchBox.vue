@@ -41,13 +41,27 @@ export default {
     focus() {
       this.$router.push('/search');
       this.$emit('show', true);
+      // if (this.query) {
+      //   this.setKeywords(this.query);
+      // }
     }
   },
   created () {
     this.$watch('query', (newQuery) => {
-      this.$emit('query', newQuery);
+      console.log(newQuery);
+      // if (newQuery.length > 0) {
+      //   this.setKeywords(newQuery);
+      // }
     })
   },
+  // mounted () {
+  //   this.$watch('query', (newQuery) => {
+  //   console.log(newQuery);
+  //   // if (newQuery.length > 0) {
+  //   //   this.setKeywords(newQuery);
+  //   // }
+  //   })
+  // },
    computed: {
     ...mapGetters([
       'keywords'

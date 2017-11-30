@@ -34,6 +34,7 @@ const perpage = 20;
 export default {
   data () {
     return {
+      keyword: this.$store.state.keywords,
       page: 1,
       pullup: true,
       beforeScroll: true,
@@ -52,6 +53,15 @@ export default {
     BetterScroll,
     NoResult
   },
+  // created () {
+  //   this.$watch('keywords', (newQuery) => {
+  //     console.log(newQuery);
+  //     if (newQuery) {
+  //       console.log(newQuery);
+  //       this._search();
+  //     }
+  //   })
+  // },
   computed: {
     ...mapGetters([
       'keywords'
