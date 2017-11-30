@@ -32,18 +32,19 @@ export default {
     clear() {
       this.query = '';
     },
-    // setQuery(query) {
-    //   this.query = query;
-    // },
+    setQuery(query) {
+      this.setKeywords(query);
+    },
     blur() {
       this.$refs.query.blur();
     },
     focus() {
+      const query = this.$refs.query.value;
       this.$router.push('/search');
       this.$emit('show', true);
-      // if (this.query) {
-      //   this.setKeywords(this.query);
-      // }
+      if (query) {
+        this.setQuery(query);
+      }
     }
   },
   created () {
