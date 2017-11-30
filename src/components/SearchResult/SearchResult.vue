@@ -2,10 +2,11 @@
   <better-scroll  ref="suggest"
                   class="suggest"
                   :data="result"
+                  @scrollToEnd="searchMore"
                   :pullup="pullup"
   >
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="(item, index) in result" :key="index">
+      <li class="suggest-item" @click="selectItem(item)" v-for="(item, index) in result" :key="index">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -13,19 +14,23 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading class="loading-more" v-show="hasMore && result.length > 0"></loading>
     </ul>
     <div class="no-result-wrapper" v-show="!result.length">
       <no-result title="抱歉，暂无搜索结果"></no-result>
     </div>
+    <router-view></router-view>
   </better-scroll>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 import NoResult from '@/baseCom/NoResult/NoResult';
 
 import { createSong } from 'common/tools/song';
+import { debounce } from 'common/tools/util';
+import Singer from 'common/tools/singer';
 import { search } from 'api/search.js';
 import { ERR_OK } from 'api/config.js';
 
@@ -36,7 +41,7 @@ export default {
     return {
       keyword: this.$store.state.keywords,
       page: 1,
-      pullup: true,
+      pullup: true, // 上拉刷新
       beforeScroll: true,
       hasMore: true,
       result: []
@@ -68,13 +73,41 @@ export default {
     ])
   },
   methods: {
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    ...mapActions([
+      'insertSong'
+    ]),
     _search() {
       this.page = 1;
       this.hasMore = true;
       this.$refs.suggest.scrollTo(0, 0);
+      let timer;
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {
+        search(this.keywords, this.page, this.showSinger, perpage).then(res => {
+          if(res.code === ERR_OK) {
+            this.result = this._genResult(res.data);
+            this._checkMore(res.data);
+          }
+        })
+      }, 200);
+      // debounce(function() {
+      
+      // }, 100);
+    },
+    searchMore() {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++;
       search(this.keywords, this.page, this.showSinger, perpage).then(res => {
         if(res.code === ERR_OK) {
-          this.result = this._genResult(res.data);
+          this.result = this.result.concat(this._genResult(res.data));
+          this._checkMore(res.dada);
         }
       })
     },
@@ -90,6 +123,29 @@ export default {
         return 'icon-mine'
       } else {
         return 'icon-music'
+      }
+    },
+    selectItem(item) {
+      if (item.type === TYPE_SINGER) {
+        const singer = new Singer({
+          id: item.singermid,
+          name: item.singername
+        })
+        this.$router.push({
+          path: `/search/${singer.id}`
+        });
+        this.setSinger(singer);
+      } else {
+        console.log(item);
+        this.insertSong(item);
+      }
+    },
+    _checkMore(data) {
+      if (data) {
+        const song = data.song;
+        if (!song.list.length || (song.curnum + song.curpage * perpage) > song.totalnum) {
+          this.hasMore = false;
+        }
       }
     },
     _genResult(data) {
@@ -114,7 +170,7 @@ export default {
   },
   watch: {
     keywords(newValue) {
-      this._search();
+     this._search();
     }
   }
 }
@@ -162,6 +218,13 @@ export default {
       top: 50%;
       transform: translateY(-50%);
     }
+  }
+
+  .loading-more {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
 }
     
