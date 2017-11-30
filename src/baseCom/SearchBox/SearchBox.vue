@@ -7,6 +7,7 @@
 </template>
 <script>
 import { mapMutations, mapGetters } from 'vuex';
+import { debounce } from 'common/tools/util';
 
 export default {
   data () {
@@ -48,21 +49,13 @@ export default {
     }
   },
   created () {
-    this.$watch('query', (newQuery) => {
-      console.log(newQuery);
-      // if (newQuery.length > 0) {
-      //   this.setKeywords(newQuery);
-      // }
+    this.$watch('query', debounce((newQuery) => {
+      this.setKeywords(newQuery);
+    }, 200));
+    this.$watch('keywords', newValue => {
+      this.query = newValue;
     })
   },
-  // mounted () {
-  //   this.$watch('query', (newQuery) => {
-  //   console.log(newQuery);
-  //   // if (newQuery.length > 0) {
-  //   //   this.setKeywords(newQuery);
-  //   // }
-  //   })
-  // },
    computed: {
     ...mapGetters([
       'keywords'
@@ -70,11 +63,13 @@ export default {
   },
   watch: {
     query(newValue) {
-      this.setKeywords(newValue);
-    },
-    keywords(newValue) {
-      this.query = newValue;
+      debounce(newValue => {
+        this.setKeywords(newValue);
+      }, 200)
     }
+    // keywords(newValue) {
+    //   this.query = newValue;
+    // }
   }
 }
 </script>
