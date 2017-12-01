@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    selectItem() {
+    selectItem(item) {
       this.$emit('select', item)
     },
     deleteOne(item) {

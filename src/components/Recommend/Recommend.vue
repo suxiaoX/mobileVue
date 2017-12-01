@@ -1,33 +1,35 @@
 <template>
   <div>
     <better-scroll ref="scroll" :data="discList">
-      <swipe>
-        <mt-swipe-item v-for="item in this.recomends" :key="item.id">
-          <a :href="item.linkUrl"></a>
-          <img :src="item.picUrl" alt="" />
-        </mt-swipe-item>
-      </swipe>
-      <div class="hot-music">
-        <h3 class="title">热门歌单推荐</h3>
-        <!-- <ul v-infinite-scroll="loadMore"
-            infinite-scroll-disabled="loading"
-            infinite-scroll-distance="10"
-            class="recommend-list"> -->
-        <ul class="recommend-list">
-          <li v-for="item in this.discList" @click="selectItem(item)" :key="item.id" class="music-info clearfix">
-            <div class="img-wraper fl">
-              <img class="needsclick" v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
-            </div>
-            <div class="fl">
-              <div class="text">
-                <h4 class="text-title" v-html="item.creator.name"></h4>
-                <p class="desc" v-html="item.dissname"></p>
+      <div>
+        <swipe>
+          <mt-swipe-item v-for="item in this.recomends" :key="item.id">
+            <a :href="item.linkUrl"></a>
+            <img :src="item.picUrl" alt="" />
+          </mt-swipe-item>
+        </swipe>
+        <div class="hot-music">
+          <h3 class="title">热门歌单推荐</h3>
+          <!-- <ul v-infinite-scroll="loadMore"
+              infinite-scroll-disabled="loading"
+              infinite-scroll-distance="10"
+              class="recommend-list"> -->
+          <ul class="recommend-list">
+            <li v-for="item in this.discList" @click="selectItem(item)" :key="item.id" class="music-info clearfix">
+              <div class="img-wraper fl">
+                <img class="needsclick" v-lazy="item.imgurl" @load="loadImage" :src="item.imgurl" />
               </div>
-            </div>
-          </li>
-        </ul>
-        <div class="loading-container" v-show="!discList.length">
-          <loading></loading>
+              <div class="fl">
+                <div class="text">
+                  <h4 class="text-title" v-html="item.creator.name"></h4>
+                  <p class="desc" v-html="item.dissname"></p>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="loading-container" v-show="!discList.length">
+            <loading></loading>
+          </div>
         </div>
       </div>
     </better-scroll>

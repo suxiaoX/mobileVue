@@ -1,23 +1,25 @@
 <template>
   <div class="search">
     <div class="shortcut-wrapper" v-show="!this.$store.state.keywords">
-      <better-scroll ref="shortcut" class="shortcut">
-        <div class="hot-key">
-          <h3 class="title">热门搜索</h3>
-          <ul>
-            <li class="item" @click="addKeywords(item.k)" v-for="(item, index) in hotKey" :key="index">
-              <span>{{item.k}}</span>
-            </li>
-          </ul>
-        </div>
-        <div class="search-history">
-          <h1 class="title">
-            <span class="text">搜索历史</span>
-            <span class="clear">
-              <i class="icon-clear" @click="clearSearchHistory"></i>
-            </span>
-          </h1>
-          <search-list @delete="deleteSearchHistory" @select="addKeywords" :searches="searchHistory"></search-list>
+      <better-scroll ref="shortcut" class="shortcut" :data="shortcut">
+        <div>
+          <div class="hot-key">
+            <h3 class="title">热门搜索</h3>
+            <ul>
+              <li class="item" @click="addKeywords(item.k)" v-for="(item, index) in hotKey" :key="index">
+                <span>{{item.k}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="search-history">
+            <h1 class="title">
+              <span class="text">搜索历史</span>
+              <span class="clear">
+                <i class="icon-clear" @click="clearSearchHistory"></i>
+              </span>
+            </h1>
+            <search-list @delete="deleteSearchHistory" @select="addKeywords" :searches="searchHistory"></search-list>
+          </div>
         </div>
       </better-scroll>
     </div>
@@ -66,7 +68,10 @@ export default {
     ...mapGetters([
       'keywords',
       'searchHistory'
-    ])
+    ]),
+    shortcut() {
+      return this.hotKey.concat(this.searchHistory);
+    }
   },
   methods: {
     saveSearch() {

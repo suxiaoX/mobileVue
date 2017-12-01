@@ -68,6 +68,7 @@ export default {
   display: flex;
   align-items: center;
   background: #eee;
+  z-index: 100;
   
   .cancle {
     width: 10%;
