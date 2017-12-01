@@ -11,11 +11,11 @@
               </li>
             </ul>
           </div>
-          <div class="search-history">
+          <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
               <span class="clear">
-                <i class="icon-clear" @click="clearSearchHistory"></i>
+                <i class="icon-clear" @click="showConfirm"></i>
               </span>
             </h1>
             <search-list @delete="deleteSearchHistory" @select="addKeywords" :searches="searchHistory"></search-list>
@@ -26,12 +26,14 @@
     <div class="search-result" v-show="this.$store.state.keywords" ref="searchResult">
       <search-result ref="suggest" @delete="deleteSearchHistory" @saveSearch="saveSearch"></search-result>
     </div>
+    <confirm ref="confirm" @confirm="clearSearchHistory"  text="是否清空所有搜索历史" confirmBtnText="清空"></confirm>
   </div>
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
+import Confirm from '@/baseCom/Confirm/Confirm';
 import SearchResult from '@/components/SearchResult/SearchResult';
 import SearchList from '@/baseCom/SearchList/SearchList'
 import { getHotKey } from 'api/search.js';
@@ -57,6 +59,7 @@ export default {
   },
   components: {
     Loading,
+    Confirm,
     BetterScroll,
     SearchResult,
     SearchList
@@ -86,6 +89,9 @@ export default {
     },
     addKeywords(keyword) {
       this.setKeywords(keyword);
+    },
+    showConfirm() {
+      this.$refs.confirm.show();
     },
     ...mapMutations({
       setKeywords: 'SET_KEYWORDS'
