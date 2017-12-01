@@ -36,32 +36,22 @@ export default {
     SearchBox
   },
   methods: {
-    ...mapMutations({
-      setQuery: 'SET_QUERY'
+     ...mapMutations({
+      setKeywords: 'SET_KEYWORDS'
     }),
-    handleSetQuery(query) {
-      this.setQuery(query);
-    },
-    handleClose () {
-      console.log('hahah')
-    },
     show(bool) {
       this.showCancle = bool;
     },
     cancle() {
       this.showCancle = false;
       this.$router.go(-1);
+      // this.setKeywords('');
     }
   },
   computed: {
     ...mapGetters([
       'keywords'
     ])
-  },
-  watch: {
-    keywords(newValue) {
-      console.log(newValue);
-    }
   }
 }
 </script>

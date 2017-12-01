@@ -17,3 +17,5 @@ export const SET_DISC = 'SET_DISC';
 export const SET_TOP_LIST = 'SET_TOP_LIST';
 // 设置排名进入播放页面的歌单列表
 export const SET_KEYWORDS = 'SET_KEYWORDS';
+// 设置本地存储
+export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY';

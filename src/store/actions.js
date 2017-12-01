@@ -1,6 +1,7 @@
 import * as types from './mutation-types';
 import { playMode } from 'common/tools/config';
 import { rearRange } from 'common/tools/util';
+import { saveSearch, deleteSearch, clearSearch } from 'common/tools/cache';
 // import { currentId } from 'async_hooks';
 
 const findIndex = (list, song) => {
@@ -72,4 +73,16 @@ export const insertSong = ({ commit, state }, song) => {
   commit(types.SET_CURRENT_INDEX, currentIndex);
   commit(types.SET_FULL_SCREEN, true);
   commit(types.SET_PLAYING_STATE, true);
+}
+
+export const saveSearchHistory = ({commit, state}, query) => {
+  commit(types.SET_SEARCH_HISTORY, saveSearch(query));
+}
+
+export const deleteSearchHistory = function ({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
+}
+
+export const clearSearchHistory = function ({commit}) {
+  commit(types.SET_SEARCH_HISTORY, clearSearch())
 }

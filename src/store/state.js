@@ -1,4 +1,5 @@
 import { playMode } from 'common/tools/config';
+import { loadSearch } from 'common/tools/cache';
 
 const state = {
   singer: {},
@@ -10,7 +11,8 @@ const state = {
   currentIndex: -1,
   disc: {},
   topList: {},
-  keywords: ''
+  keywords: '',
+  searchHistory: loadSearch()
 };
 
 export default state;

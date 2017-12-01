@@ -10,18 +10,28 @@
             </li>
           </ul>
         </div>
+        <div class="search-history">
+          <h1 class="title">
+            <span class="text">搜索历史</span>
+            <span class="clear">
+              <i class="icon-clear" @click="clearSearchHistory"></i>
+            </span>
+          </h1>
+          <search-list @delete="deleteSearchHistory" @select="addKeywords" :searches="searchHistory"></search-list>
+        </div>
       </better-scroll>
     </div>
     <div class="search-result" v-show="this.$store.state.keywords" ref="searchResult">
-      <search-result ref="suggest"></search-result>
+      <search-result ref="suggest" @delete="deleteSearchHistory" @saveSearch="saveSearch"></search-result>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 import SearchResult from '@/components/SearchResult/SearchResult';
+import SearchList from '@/baseCom/SearchList/SearchList'
 import { getHotKey } from 'api/search.js';
 import { ERR_OK } from 'api/config.js';
 
@@ -46,17 +56,22 @@ export default {
   components: {
     Loading,
     BetterScroll,
-    SearchResult
+    SearchResult,
+    SearchList
   },
   created () {
     this._getHotkey();
   },
   computed: {
     ...mapGetters([
-      'keywords'
+      'keywords',
+      'searchHistory'
     ])
   },
   methods: {
+    saveSearch() {
+      this.saveSearchHistory(this.keywords);
+    },
     _getHotkey() {
       getHotKey().then(res => {
         if (res.code === ERR_OK) {
@@ -70,6 +85,11 @@ export default {
     ...mapMutations({
       setKeywords: 'SET_KEYWORDS'
     }),
+     ...mapActions([
+      'saveSearchHistory',
+      'deleteSearchHistory',
+      'clearSearchHistory'
+    ])
   }
 }
 </script>
@@ -114,14 +134,14 @@ export default {
           align-items: center;
           height: 40px;
           font-size: $font-size-medium;
-          color: $color-text-l;
+          // color: $color-text-l;
           .text{
             flex: 1;
           }
           .clear{
             .icon-clear{
               font-size: $font-size-medium;
-              color: $color-text-d;
+              // color: $color-text-d;
             }
           }
         }

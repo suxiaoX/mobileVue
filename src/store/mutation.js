@@ -30,6 +30,9 @@ const mutations = {
   },
   [types.SET_KEYWORDS] (state, keywords) {
     state.keywords = keywords;
+  },
+  [types.SET_SEARCH_HISTORY] (state, history) {
+    state.searchHistory = history;
   }
 };
 

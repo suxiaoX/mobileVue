@@ -16,7 +16,7 @@
       </li>
       <loading class="loading-more" v-show="hasMore && result.length > 0"></loading>
     </ul>
-    <div class="no-result-wrapper" v-show="!result.length">
+    <div class="no-result-wrapper" v-show="!result.length && keyword">
       <no-result title="抱歉，暂无搜索结果"></no-result>
     </div>
     <router-view></router-view>
@@ -77,27 +77,19 @@ export default {
       setSinger: 'SET_SINGER'
     }),
     ...mapActions([
-      'insertSong'
+      'insertSong',
+      'saveSearchHistory'
     ]),
     _search() {
       this.page = 1;
       this.hasMore = true;
       this.$refs.suggest.scrollTo(0, 0);
-      let timer;
-      if (timer) {
-        clearTimeout(timer)
-      }
-      timer = setTimeout(() => {
-        search(this.keywords, this.page, this.showSinger, perpage).then(res => {
-          if(res.code === ERR_OK) {
-            this.result = this._genResult(res.data);
-            this._checkMore(res.data);
-          }
-        })
-      }, 200);
-      // debounce(function() {
-      
-      // }, 100);
+      search(this.keywords, this.page, this.showSinger, perpage).then(res => {
+        if(res.code === ERR_OK) {
+          this.result = this._genResult(res.data);
+          this._checkMore(res.data);
+        }
+      })
     },
     searchMore() {
       if (!this.hasMore) {
@@ -136,9 +128,10 @@ export default {
         });
         this.setSinger(singer);
       } else {
-        console.log(item);
         this.insertSong(item);
       }
+
+      this.$emit('saveSearch');
     },
     _checkMore(data) {
       if (data) {
@@ -170,7 +163,7 @@ export default {
   },
   watch: {
     keywords(newValue) {
-     this._search();
+      this._search();
     }
   }
 }
