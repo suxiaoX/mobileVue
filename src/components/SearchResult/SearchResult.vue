@@ -163,7 +163,7 @@ export default {
   },
   watch: {
     keywords(newValue) {
-      this._search();
+      this._search(newValue);
     }
   }
 }
