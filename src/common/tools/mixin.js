@@ -35,7 +35,7 @@ export const playerMixin = {
       } else {
         list = this.sequenceList
       }
-      this.resetCurrentIndex(list)
+      this._resetCurrendIndex(list)
       this.setPlaylist(list)
     },
     _resetCurrendIndex (list) {
