@@ -1,8 +1,13 @@
 import storage from 'good-storage';
-// import { seagreen } from '../../../../../Library/Caches/typescript/2.6/node_modules/@types/color-name';
 
 const SEARCH_KEY = '_search_';
 const SEARCH_MAX_LEN = 15;
+
+const PLAY_KEY = '__play__';
+const PLAY_MAX_LEN = 200;
+
+const FAVORITE_KEY = '__favorite__'
+const FAVORITE_MAX_LEN = 200
 
 const insertArray = (arr, val, compare, maxLen) => {
   const index = arr.findIndex(compare);
@@ -54,4 +59,45 @@ export const deleteSearch = (query) => {
 export const clearSearch = () => {
   storage.remove(SEARCH_KEY)
   return []
+}
+
+export const savePlay = (song) => {
+  let songs = storage.get(PLAY_KEY, []);
+  insertArray(songs, song, (item) => {
+    return song.id === item.id;
+  }, PLAY_MAX_LEN);
+
+  storage.set(PLAY_KEY, songs);
+
+  return songs;
+}
+
+export const loadPlay = () => {
+  return storage.get(PLAY_KEY, []);
+}
+
+export const saveFavorite = (song) => {
+  let songs = storage.get(FAVORITE_KEY, [])
+  insertArray(songs, song, (item) => {
+    return song.id === item.id
+  }, FAVORITE_MAX_LEN);
+
+  storage.set(FAVORITE_KEY, songs);
+
+  return songs;
+}
+
+export const deleteFavorite = (song) => {
+  let songs = storage.get(FAVORITE_KEY, []);
+  deleteFromArray(songs, item => {
+    return item.id === song.id
+  });
+
+  storage.set(FAVORITE_KEY, songs);
+
+  return songs;
+}
+
+export const loadFavorite = () => {
+  return storage.get(FAVORITE_KEY, []);
 }

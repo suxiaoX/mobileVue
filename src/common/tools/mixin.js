@@ -44,6 +44,13 @@ export const playerMixin = {
       })
       this.setCurrentIndex(index)
     },
+    toggleFavorite (song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song);
+      } else {
+        this.saveFavoriteList(song);
+      }
+    },
     getFavoriteIcon (song) {
       if (this.isFavorite(song)) {
         return 'icon-favorite'

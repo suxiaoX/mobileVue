@@ -1,7 +1,7 @@
 import * as types from './mutation-types';
 import { playMode } from 'common/tools/config';
 import { rearRange } from 'common/tools/util';
-import { saveSearch, deleteSearch, clearSearch } from 'common/tools/cache';
+import { saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite } from 'common/tools/cache';
 // import { currentId } from 'async_hooks';
 
 const findIndex = (list, song) => {
@@ -85,4 +85,50 @@ export const deleteSearchHistory = function ({commit}, query) {
 
 export const clearSearchHistory = function ({commit}) {
   commit(types.SET_SEARCH_HISTORY, clearSearch())
+}
+// 删除歌曲
+export const deleteSong = ({commit, state}, song) => {
+  let playlist = state.playlist.slice();
+  let sequenceList = state.sequenceList.slice();
+  let currentIndex = state.currentIndex;
+  let pIndex = findIndex(playlist, song);
+
+  playlist.splice(pIndex, 1);
+
+  let sIndex = findIndex(sequenceList, song);
+  sequenceList.splice(sIndex, 1);
+  if (currentIndex > pIndex || currentIndex === playlist.length) {
+    currentIndex--;
+  }
+  commit(types.SET_PLAYLIST, playlist);
+  commit(types.SET_SEQUENCE_LIST, sequenceList);
+  commit(types.SET_CURRENT_INDEX, currentIndex);
+  if (!playlist.length) {
+    commit(types.SET_PLAYING_STATE, false)
+  } else {
+    commit(types.SET_PLAYING_STATE, true)
+  }
+}
+
+// 删除歌曲列表
+export const deleteSongList = ({commit}) => {
+  commit(types.SET_CURRENT_INDEX, -1);
+  commit(types.SET_PLAYLIST, []);
+  commit(types.SET_SEQUENCE_LIST, []);
+  commit(types.SET_PLAYING_STATE, false);
+}
+
+// 保存播放历史
+export const savePlayHistory = ({commit}, song) => {
+  commit(types.SET_PLAY_HISTORY, savePlay(song));
+}
+
+// 保存喜欢歌曲
+export const saveFavoriteList = ({commit}, song) => {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song));
+}
+
+// 删除新欢歌曲列表
+export const deleteFavoriteList = ({commit}, song) => {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song));
 }

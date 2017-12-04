@@ -6,7 +6,7 @@
           <h1 class="title">
             <i class="icon"></i>
             <span class="text">{{modeText}}</span>
-            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
+            <span class="clear" @click="showConfirm()"><i class="icon-clear"></i></span>
           </h1>
         </div>
       <better-scroll ref="listContent" :data="sequenceList" class="list-content" :refreshDelay="refreshDelay">
@@ -14,10 +14,10 @@
           <li class="item" v-for="(item, index) in sequenceList" :key="item.id">
             <i class="current" :class="getCurrentIcon(item)"></i>
             <span class="text">{{item.name}}</span>
-            <span class="like">
-              <i class="icon-favorite"></i>
+            <span class="like" @click.stop="toggleFavorite(item)">
+              <i :class="getFavoriteIcon(item)"></i>
             </span>
-            <span class="delete">
+            <span class="delete" @click.stop="deleteOne(item)">
               <i class="icon-delete"></i>
             </span>
           </li>
@@ -33,11 +33,12 @@
         <span>关闭</span>
       </div>
     </div>
-    <confirm ref="confirm" text="是否清空播放列表" confirmBtnText="清空"></confirm>
+    <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
   </div>
 </transition> 
 </template>
 <script>
+import { mapActions } from 'vuex';
 import { playerMixin } from 'common/tools/mixin';
 import { playMode } from 'common/tools/config';
 
@@ -61,8 +62,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'deleteSong',
+      'deleteSongList'
+    ]),
     show() {
       this.showFlag = true;
+      this.$refs.listContent.refresh();
+      this.scrollToCurrent(this.currentSong);
     },
     hide() {
       this.showFlag = false;
@@ -70,12 +77,27 @@ export default {
     showConfirm() {
       this.$refs.confirm.show();
     },
+    confirmClear() {
+      this.deleteSongList();
+      this.hide();
+    },
+    deleteOne(item) {
+      this.deleteSong(item);
+      if (!this.playlist.length) {
+        this.hide();
+      }
+    },
     getCurrentIcon(item) {
       if (this.currentSong.id === item.id) {
         return 'icon-play'
       }
       return ''
     },
+    scrollToCurrent(current) {
+      const index = this.sequenceList.findIndex(song => {
+        return current.id === song.id;
+      })
+    }
   }
 }
 </script>
