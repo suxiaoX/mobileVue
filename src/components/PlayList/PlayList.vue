@@ -11,7 +11,7 @@
         </div>
       <better-scroll ref="listContent" :data="sequenceList" class="list-content" :refreshDelay="refreshDelay">
         <transition-group ref="list" name="list" tag="ul">
-          <li class="item" v-for="(item, index) in sequenceList" :key="item.id">
+          <li class="item" @click="selectItem(item, index)" v-for="(item, index) in sequenceList" :key="item.id">
             <i class="current" :class="getCurrentIcon(item)"></i>
             <span class="text">{{item.name}}</span>
             <span class="like" @click.stop="toggleFavorite(item)">
@@ -72,8 +72,10 @@ export default {
     ]),
     show() {
       this.showFlag = true;
-      this.$refs.listContent.refresh();
-      this.scrollToCurrent(this.currentSong);
+      setTimeout(() => {
+        this.$refs.listContent.refresh();
+        this.scrollToCurrent(this.currentSong);
+      })
     },
     hide() {
       this.showFlag = false;
@@ -100,9 +102,30 @@ export default {
       }
       return ''
     },
+    selectItem(item, index) {
+      if (this.mode === playMode.random) {
+        index = this.playlist.findIndex(song => {
+          return song.id === item.id
+        })
+      }
+      this.setCurrentIndex(index);
+      this.setPlayingState(true);
+    },
     scrollToCurrent(current) {
       const index = this.sequenceList.findIndex(song => {
         return current.id === song.id;
+      })
+      this.$refs.listContent.scrollToElement(this.$refs.list.$el.children[index], 500);
+    }
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      if (!this.showFlag || newSong.id === oldSong.id) {
+        return
+      }
+
+      setTimeout(() => {
+        this.scrollToCurrent(newSong);
       })
     }
   }
