@@ -87,11 +87,12 @@
              <i @click.stop="togglePlaying()" class="icon-mini" :class="miniIcon"></i>
           </progress-circle>     
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlayList()">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <play-list ref="playlist"></play-list>
     <audio ref="audio" :src="currentSong.url" @play="ready" @error="errorPlay"  @timeupdate="updateTime" @ended="end"></audio>
   </div>  
 </template>
@@ -105,6 +106,7 @@ import { rearRange } from 'common/tools/util';
 import ProgressBar from '@/baseCom/ProgressBar/ProgressBar';
 import ProgressCircle from '@/baseCom/ProgressCircle/ProgressCircle';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
+import PlayList from '@/components/PlayList/PlayList';
 
 export default {
   data () {
@@ -121,7 +123,8 @@ export default {
   components: {
     ProgressBar,
     ProgressCircle,
-    BetterScroll
+    BetterScroll,
+    PlayList
   },
   created () {
     this.touch = {}
@@ -431,6 +434,9 @@ export default {
       }
       this.playingLyric = txt;
     },
+    showPlayList() {
+      this.$refs.playlist.show();
+    }
   },
   watch: {// 采用监听的方式，去实现下一首，上一首，暂停等功能
     currentSong(newSong, oldSong) {
