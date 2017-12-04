@@ -165,7 +165,6 @@ export default {
       setPlayingState: 'SET_PLAYING_STATE',
       setPlayMode: 'SET_PLAY_MODE',
       setPlaylist: 'SET_PLAYLIST'
-
     }),
     hideNormal() {
       this.setFullScreen(false);

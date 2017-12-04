@@ -2,33 +2,62 @@
 <transition name="list-fade">
   <div class="playlist" @click="hide()" v-show="showFlag">
     <div class="list-wrapper" @click.stop>
-       <div class="list-header">
+      <div class="list-header">
           <h1 class="title">
             <i class="icon"></i>
-            <span class="text">标题</span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <span class="text">{{modeText}}</span>
+            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <div class="list-operate">
-          <div class="add">
-            <i class="icon-add"></i>
-            <span class="text">添加歌曲到队列</span>
-          </div>
-        </div>
-        <div @click="hide()" class="list-close">
-          <span>关闭</span>
+      <better-scroll ref="listContent" :data="sequenceList" class="list-content" :refreshDelay="refreshDelay">
+        <transition-group ref="list" name="list" tag="ul">
+          <li class="item" v-for="(item, index) in sequenceList" :key="item.id">
+            <i class="current" :class="getCurrentIcon(item)"></i>
+            <span class="text">{{item.name}}</span>
+            <span class="like">
+              <i class="icon-favorite"></i>
+            </span>
+            <span class="delete">
+              <i class="icon-delete"></i>
+            </span>
+          </li>
+        </transition-group>
+      </better-scroll>
+      <div class="list-operate">
+        <div class="add">
+          <i class="icon-add"></i>
+          <span class="text">添加歌曲到队列</span>
         </div>
       </div>
+      <div @click="hide()" class="list-close">
+        <span>关闭</span>
+      </div>
     </div>
+    <confirm ref="confirm" text="是否清空播放列表" confirmBtnText="清空"></confirm>
   </div>
 </transition> 
 </template>
 <script>
+import { playerMixin } from 'common/tools/mixin';
+import { playMode } from 'common/tools/config';
+
+import Confirm from '@/baseCom/Confirm/Confirm';
+import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 export default {
+  mixins: [playerMixin],
   data () {
     return {
       showFlag: false,
       refreshDelay: 120
+    }
+  },
+  components: {
+    Confirm,
+    BetterScroll
+  },
+  computed: {
+    modeText() {
+      return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
     }
   },
   methods: {
@@ -37,7 +66,16 @@ export default {
     },
     hide() {
       this.showFlag = false;
-    }
+    },
+    showConfirm() {
+      this.$refs.confirm.show();
+    },
+    getCurrentIcon(item) {
+      if (this.currentSong.id === item.id) {
+        return 'icon-play'
+      }
+      return ''
+    },
   }
 }
 </script>
