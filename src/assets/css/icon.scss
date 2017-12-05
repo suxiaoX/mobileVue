@@ -104,40 +104,14 @@
 }
 
 
-/*
-.icon-ok:before
-content: "\e900"
+.icon-add:before {
+  content: "\e902"
+}
 
+.icon-ok:before {
+  content: "\e900"
+}
 
-
-.icon-add:before
-content: "\e902"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.icon-back:before
-content: "\e911"
-
-.icon-mine:before
-content: "\e912"
-
-
-
-
-
-*/
+.icon-nofound:before { 
+  content: "\e962"; 
+}

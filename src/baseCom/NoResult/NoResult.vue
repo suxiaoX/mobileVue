@@ -1,6 +1,8 @@
 <template>
   <div class="no-result">
-    <div class="no-result-icon"></div>
+    <div class="no-result-icon">
+      <i class="icon-close"></i>
+    </div>
     <p class="no-result-text">{{title}}</p>
   </div>
 </template>
@@ -28,6 +30,10 @@
       height: 90px;
       margin: 0 auto;
       background-size: 86px 90px;
+
+      i {
+        font-size: 50px;
+      }
     }
 
     .no-result-text {
