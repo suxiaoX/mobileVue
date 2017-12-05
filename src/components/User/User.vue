@@ -166,7 +166,7 @@ export default {
   .list-wrapper {
     position: absolute;
     top: 120px;
-    bottom: 0;
+    bottom: 40px;
     width: 100%;
 
     .list-scroll {

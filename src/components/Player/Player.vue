@@ -97,7 +97,7 @@
   </div>  
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import animations from 'create-keyframe-animation';
 import Lyric from 'lyric-parser';
 
@@ -166,6 +166,9 @@ export default {
       setPlayMode: 'SET_PLAY_MODE',
       setPlaylist: 'SET_PLAYLIST'
     }),
+    ...mapActions([
+      'savePlayHistory'
+    ]),
     hideNormal() {
       this.setFullScreen(false);
     },
@@ -225,6 +228,8 @@ export default {
     ready() {
       // 歌曲准备好了才开始播放
       this.songReady = true;
+      // 保存播放历史
+      this.savePlayHistory(this.currentSong);
     },
     end() { // 播放模式为单曲循环的时候，结束后重新开始
       if (this.mode === playMode.loop) {
