@@ -27,7 +27,7 @@ export default {
     },
     loop: {
       type: Boolean,
-      default: true,
+      default: true
     }
   }
 }

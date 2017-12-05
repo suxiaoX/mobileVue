@@ -36,7 +36,7 @@ export default {
     SearchBox
   },
   methods: {
-     ...mapMutations({
+    ...mapMutations({
       setKeywords: 'SET_KEYWORDS'
     }),
     show(bool) {
