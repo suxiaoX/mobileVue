@@ -14,12 +14,12 @@
       <div class="list-wrapper" ref="listWrapper">
         <better-scroll ref="favoriteList" class="list-scroll" v-if="currentIndex===0" :data="favoriteList">
           <div class="list-inner">
-            <song-list :songs="favoriteList"></song-list>
+            <song-list :songs="favoriteList" @select="selectSong"></song-list>
           </div>
         </better-scroll>
         <better-scroll ref="playList" class="list-scroll" v-if="currentIndex===1" :data="playHistory">
           <div class="list-inner">
-            <song-list :songs="playHistory"></song-list>
+            <song-list :songs="playHistory" @select="selectSong"></song-list>
           </div>
         </better-scroll>
       </div>
@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'insertSong',
       'randomPlay'
     ]),
     back() {
@@ -75,6 +76,9 @@ export default {
       this.randomPlay({
         list
       })
+    },
+    selectSong(song) {
+      this.insertSong(new Song(song));
     }
   },
   computed: {
