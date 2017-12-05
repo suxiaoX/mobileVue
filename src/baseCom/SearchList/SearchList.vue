@@ -55,14 +55,14 @@ export default {
        
       .text {
         flex: 1;
-        // color: $color-text-l;
+        color: $color-text-l;
       }
         
       .icon {
         //  extend-click()
         .icon-delete {
           font-size: $font-size-small;
-          // color: $color-text-d;
+          color: $color-text-d;
         }
       }
     }

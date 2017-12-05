@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <better-scroll ref="scroll" :data="discList">
+  <div class="recommend" ref="recommend">
+    <better-scroll ref="scroll" :data="this.discList">
       <div>
         <swipe>
           <mt-swipe-item v-for="item in this.recomends" :key="item.id">
@@ -42,15 +42,16 @@ import { mapMutations } from 'vuex';
 import Swipe from '@/baseCom/Swipe/Swipe';
 import Loading from '@/baseCom/Loading/Loading';
 import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
-import { Cell, InfiniteScroll, SwipeItem } from 'mint-ui';
+// import { Cell, InfiniteScroll, SwipeItem } from 'mint-ui';
 import { getRecommend, getDiscList } from 'api/recommend.js';
 import { ERR_OK } from 'api/config.js';
-
-Vue.component(Cell.name, Cell);
-Vue.use(InfiniteScroll);
-Vue.component(SwipeItem.name, SwipeItem);
+import { playlistMixin } from 'common/tools/mixin';
+// Vue.component(Cell.name, Cell);
+// Vue.use(InfiniteScroll);
+// Vue.component(SwipeItem.name, SwipeItem);
 
 export default {
+  mixins: [playlistMixin],
   data () {
     return {
       recomends: [],
@@ -74,6 +75,12 @@ export default {
     ...mapMutations({
       setDisc: 'SET_DISC'
     }),
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : '';
+
+      this.$refs.recommend.style.bottom = bottom;
+      this.$refs.scroll.refresh();
+    },
     /*
     loadMore () {
       this.loading = true

@@ -114,9 +114,10 @@ export default {
   }
   .shortcut-wrapper{
     position: fixed;
-    top: 48px;
+    top: 44px;
     bottom: 0;
     width: 100%;
+    background: #000;
     .shortcut{
       height: 100%;
       overflow: hidden;
