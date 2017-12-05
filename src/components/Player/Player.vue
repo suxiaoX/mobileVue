@@ -64,7 +64,7 @@
               <i class="icon-next" @click="nextSong()"></i>
             </div>
             <div class="icon i-right" :class="disableCls">
-              <i class="icon-not-favorite"></i>
+              <i @click="toggleFavorite(currentSong)" class="icon" :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -100,6 +100,7 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import animations from 'create-keyframe-animation';
 import Lyric from 'lyric-parser';
+import { playerMixin } from 'common/tools/mixin';
 
 import { playMode } from 'common/tools/config';
 import { rearRange } from 'common/tools/util';
@@ -109,6 +110,7 @@ import BetterScroll from '@/baseCom/BetterScroll/BetterScroll';
 import PlayList from '@/components/PlayList/PlayList';
 
 export default {
+  mixins: [playerMixin],
   data () {
     return {
       songReady: false,
@@ -134,10 +136,10 @@ export default {
       'currentIndex',
       'fullScreen',
       'playing',
-      'currentSong',
-      'playlist',
-      'mode',
-      'sequenceList'
+      // 'currentSong',
+      // 'playlist',
+      // 'mode',
+      // 'sequenceList'
     ]),
     iconMode() {
       return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
@@ -160,11 +162,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlaylist: 'SET_PLAYLIST'
+      setFullScreen: 'SET_FULL_SCREEN'
+      // setCurrentIndex: 'SET_CURRENT_INDEX',
+      // setPlayingState: 'SET_PLAYING_STATE',
+      // setPlayMode: 'SET_PLAY_MODE',
+      // setPlaylist: 'SET_PLAYLIST'
     }),
     ...mapActions([
       'savePlayHistory'
@@ -299,6 +301,8 @@ export default {
       this.$refs.cdWrapper.style.transition = '';
       this.$refs.cdWrapper.style.transform = '';
     },
+    /*
+    通过mixins引入了公共函数，这里不需要了
     changeMode() {
       const mode = (this.mode + 1) % 3;
       this.setPlayMode(mode);
@@ -317,6 +321,7 @@ export default {
       })
       this.setCurrentIndex(index)
     },
+    */
     _getPosAndScale() {
       const targetWidth = 40; // 目标宽度，mini-player的图片宽度
       const paddingLeft = 40; // 目标mini-player的图片离左边屏幕的距离

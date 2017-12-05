@@ -44,7 +44,7 @@ export default {
       currentIndex: 0,
       switches: [
         { name: '我喜欢的' },
-        { name: '最近听的' }
+        { name: '最近播放' }
       ]  
     }
   },
