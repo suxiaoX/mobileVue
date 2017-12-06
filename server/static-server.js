@@ -9,9 +9,7 @@ const app = express();
 app.use(cors());
 // 避免刷新无页面 404
 app.use(history());
-
 app.use('/api', require('./api'));
-
 app.use(express.static('dist'));
 
 // 404
@@ -26,7 +24,6 @@ app.use((req, res) => {
   console.log('............////////////////...................////////////////////...........');
   return res.status(500).send('500 status');
 });
-
 // 路由匹配错误
 app.get('*', (req, res, next) => {
   console.log('404 handler...');
