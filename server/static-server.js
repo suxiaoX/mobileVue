@@ -35,7 +35,7 @@ app.get('*', (req, res, next) => {
 
 app.get('/', (req, res, next) => {
   try {
-    res.render('/dist/index');
+    res.render('/dist/index.html');
   } catch (err) {
     next(err);
   }
