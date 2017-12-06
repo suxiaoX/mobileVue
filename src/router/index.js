@@ -39,8 +39,8 @@ const Recommend = resolve => {
 const Disc = resolve => {
   import('@/components/Disc/Disc').then(module => {
     resolve(module);
-  })
-}
+  });
+};
 
 const Singer = resolve => {
   import('@/components/Singer/Singer').then(module => {
@@ -63,8 +63,8 @@ const Rank = resolve => {
 const TopList = resolve => {
   import('@/components/TopList/TopList').then(module => {
     resolve(module);
-  })
-}
+  });
+};
 
 const Radio = resolve => {
   import('@/components/Radio/Radio').then(module => {
@@ -81,6 +81,10 @@ const Search = resolve => {
 export default new Router({
   mode: 'history',
   routes: [
+    {
+      path: '*',
+      redirect: '/'
+    },
     {
       path: '/',
       // name: 'home',

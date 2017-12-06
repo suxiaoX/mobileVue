@@ -58,6 +58,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
+    port: 3030,
+
     /**
      * Source Maps
      */
