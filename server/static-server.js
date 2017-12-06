@@ -27,13 +27,6 @@ app.use((req, res) => {
   return res.status(500).send('500 status');
 });
 
-app.get('/', (req, res, next) => {
-  try {
-    res.render('/dist/index');
-  } catch (err) {
-    next(err);
-  }
-});
 // 路由匹配错误
 app.get('*', (req, res, next) => {
   console.log('404 handler...');
@@ -41,6 +34,14 @@ app.get('*', (req, res, next) => {
     status: 404,
     title: 'NotFound'
   });
+});
+
+app.get('/', (req, res, next) => {
+  try {
+    res.render('/dist/index');
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = app.listen(PORT, (err) => {
