@@ -12,6 +12,13 @@ app.use(history());
 app.use('/api', require('./api'));
 app.use(express.static('dist'));
 
+app.get('/', (req, res, next) => {
+  try {
+    res.render('/dist/index.html');
+  } catch (err) {
+    next(err);
+  }
+});
 // 404
 app.use((req, res) => {
   const err = new Error('Not Found');
@@ -24,6 +31,7 @@ app.use((req, res) => {
   console.log('............////////////////...................////////////////////...........');
   return res.status(500).send('500 status');
 });
+
 // 路由匹配错误
 app.get('*', (req, res, next) => {
   console.log('404 handler...');
@@ -31,14 +39,6 @@ app.get('*', (req, res, next) => {
     status: 404,
     title: 'NotFound'
   });
-});
-
-app.get('/', (req, res, next) => {
-  try {
-    res.render('/dist/index.html');
-  } catch (err) {
-    next(err);
-  }
 });
 
 module.exports = app.listen(PORT, (err) => {
