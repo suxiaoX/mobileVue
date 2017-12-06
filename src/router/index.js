@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { resolve } from 'path';
+// import { resolve } from 'path';
 // import { resolve } from '../../../../Library/Caches/typescript/2.6/node_modules/@types/q';
 // import HelloWorld from '@/components/HelloWorld'
 
@@ -75,8 +75,8 @@ const Radio = resolve => {
 const Search = resolve => {
   import('@/components/Search/Search').then(module => {
     resolve(module);
-  })
-}
+  });
+};
 
 export default new Router({
   mode: 'history',
